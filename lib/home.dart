@@ -34,7 +34,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
     Tab(text: 'Kortit',
         icon: Icon(Icons.contacts,
-          color: Colors.lightGreen,
+          color: Colors.green,
           size: 30.0,
         )),
     Tab(text: 'Kalevala',
@@ -44,12 +44,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     )),
     Tab(text: 'Sanakirja',
         icon: Icon(Icons.search,
-          color: Colors.greenAccent,
+          color: Colors.green,
           size: 30.0,
         )),
     Tab(text: 'Palkinto',
         icon: Icon(Icons.star,
-          color: Colors.lightGreen,
+          color: Colors.green,
           size: 30.0,
         )),
   ];

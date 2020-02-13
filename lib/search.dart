@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 //import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -121,13 +122,13 @@ class DataSearch extends SearchDelegate<String> {
     dictionary = Dictionary.fromJson(dmap);
 
 
-    if (query.isEmpty) {
-      dictionary.displaySuggestions=true ;
-    } else {
-      dictionary.query = query;
-      dictionary.displaySuggestions=false ;
-      dictionary.displayWords = dictionary.entries;
-    }
+//    if (query.isEmpty) {
+//      dictionary.displaySuggestions=true ;
+//    } else {
+//      dictionary.query = query;
+//      dictionary.displaySuggestions=false ;
+//      dictionary.displayWords = dictionary.entries;
+//    }
   }
 
   @override
@@ -152,8 +153,80 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return Container(width: 0.0, height: 0.0);
+    return FutureBuilder(
+        future: fetchDictionary(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Text('Press button to start.');
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) return null;
+              return ListView.builder(
+                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length > 30 ? 30 : dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length ,
+                itemBuilder: (context, index) => Card(
+                  color: Colors.white,
+                  elevation: 0.0,
+                  child: ExpansionTile(
+                    title: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                              dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].word,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+
+                              ),
+//                              toolbarOptions: ToolbarOptions(
+//                                  copy: true,
+//                                  selectAll: true)
+                          ),
+                          Text(
+                              dictionary.entries.where((w)=> w.definition.startsWith(query)).toList()[index].definition,
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.normal,
+                              ),
+//                              toolbarOptions: ToolbarOptions(
+//                                  copy: true,
+//                                  selectAll: true)
+                          ),
+                        ],
+                      ),
+                    ),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                      child: Text(dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].word.substring(0,2)),
+                    ),
+                    children: dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].examples.map((m) {
+                      return ListTile(
+                        title: Text(
+                          m.toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+//                            toolbarOptions: ToolbarOptions(
+//                                copy: true,
+//                                selectAll: true)
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              );
+          }
+          return Container();
+        });
   }
 
   @override
@@ -172,7 +245,7 @@ class DataSearch extends SearchDelegate<String> {
             case ConnectionState.done:
               if (snapshot.hasError) return null;
               return ListView.builder(
-                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length > 50 ? 50 : dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length ,
+                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length > 30 ? 30 : dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length ,
                 itemBuilder: (context, index) => Card(
                   color: Colors.white,
                   elevation: 0.0,
@@ -188,7 +261,11 @@ class DataSearch extends SearchDelegate<String> {
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
+
                             ),
+//                            toolbarOptions: ToolbarOptions(
+//                              copy: true,
+//                              selectAll: true)
                           ),
                           Text(
                             dictionary.entries.where((w)=> w.definition.startsWith(query)).toList()[index].definition,
@@ -196,6 +273,9 @@ class DataSearch extends SearchDelegate<String> {
                               fontSize: 22.0,
                               fontWeight: FontWeight.normal,
                             ),
+//                              toolbarOptions: ToolbarOptions(
+//                                  copy: true,
+//                                  selectAll: true)
                           ),
                         ],
                       ),
@@ -213,6 +293,9 @@ class DataSearch extends SearchDelegate<String> {
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
+//                            toolbarOptions: ToolbarOptions(
+//                                copy: true,
+//                                selectAll: true)
                         ),
                       );
                     }).toList(),
@@ -230,7 +313,7 @@ class DataSearch extends SearchDelegate<String> {
 }
 
 Future<Map<String, dynamic>> parseJsonFromAssets(String assetsPath) async {
-  print('--- Parse json from: $assetsPath');
+  //print('--- Parse json from: $assetsPath');
   return rootBundle.loadString(assetsPath)
       .then((jsonStr) => jsonDecode(jsonStr));
 }
