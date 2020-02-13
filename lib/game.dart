@@ -713,8 +713,8 @@ class _GameState extends State<Game> with WidgetsBindingObserver, TickerProvider
     }
   }
 
-  Future<bool> _backHome() async {
-    return await Navigator.pop(context, true);
+  void _backHome() {
+    Navigator.pop(context, true);
   }
 
   @override
