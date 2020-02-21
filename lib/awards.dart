@@ -26,8 +26,13 @@ class _AwardsState extends State<Awards> {
             Hero(
               tag: 'aino',
               child: Image.asset('characters/aino.png'),
+            ),
+            Hero(
+              tag: 'aino',
+              child: Image.asset('characters/ilmarinen.png'),
             )
           ],
+
 //          children: List.generate(12, (index) {
 //            return Center(
 //              child: Image.asset('characters2/'+index.toString()+'.png'),
