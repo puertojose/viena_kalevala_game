@@ -4,6 +4,8 @@ import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
 
+import 'dart:html' as html;
+
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CardGame extends StatefulWidget {
@@ -13,6 +15,8 @@ class CardGame extends StatefulWidget {
 
 class _CardGameState extends State<CardGame> {
 
+
+  html.AudioElement audio;
 
   List<List<dynamic>> questions;
 
@@ -139,8 +143,8 @@ class _CardGameState extends State<CardGame> {
           borderRadius: BorderRadius.circular(24.0),
           shadowColor: Color(0x802196F3),
           child: Container(
-            width: 380,
-            height: 450,
+            width: 330,
+            height: 391,
             child: Column(
 
               children: <Widget>[
