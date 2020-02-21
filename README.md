@@ -1,3 +1,6 @@
+## Running example:
+ https://puertojose.github.io/viena_kalevala_game/
+
 # viena_kalevala_game
 
 A new Flutter project.
