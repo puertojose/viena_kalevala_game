@@ -30,7 +30,7 @@ class _KalevalaState extends State<Kalevala> {
   Future _getThingsOnStartup() async {
     await loadAsset('kalevala1.csv').then((dynamic output) {
       var csvRaw = output;
-//      print(csvRaw);
+      print(csvRaw);
       List<List<dynamic>> csvTable = CsvToListConverter().convert(output);
       questions = csvTable;
       print(questions);
@@ -99,7 +99,7 @@ class _KalevalaState extends State<Kalevala> {
 
 
   void _loadNextQuestion() {
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       _correctAnimation=false;
 
 
