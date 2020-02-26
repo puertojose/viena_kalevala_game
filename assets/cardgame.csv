@@ -1,6 +1,3 @@
-In English,In Finnish,Correct answer in Viena,Wrong answer,Wrong answer,Wrong answer
-,,,,,
-Animals,,,,,
 ant,muurahainen,muurahaini,muurakko,muurahaine,muurane
 butterfly,perhonen,liipukkaini,perhoni,liipukkaine,perhaini
 sparrow,varpunen,varpuni,varpaine,lintuine,lintuini
@@ -16,13 +13,9 @@ wolf,susi,hukka,susie,susilaini,hukkaini
 sheep,lammas,lammaš,lammukka,lammukkaini,lammas
 cow,lehmä,lehmä,lehemä,lehmane,lehmäe
 chicken,kana,kana,kanani,kanaini,kano
-,,,,,
-,,,,,
-,,,,,
-Family members,,,,,
 father,isä,tuatto,isä,tuattuo,pappa
 mother,äiti,muamo,mamma,äiti,muamuo
-sister,f,čikko,tcikko,šisko,sisko
+sister,sisko,čikko,tcikko,šisko,sisko
 brother,veli,veikko,vel´i,veli,veiko
 girl,tyttö,tyttö,tyyteli,tyttöini,tyty
 boy,poika,poika,poju,poikaine,poikka
@@ -31,8 +24,6 @@ grandmother,isoäiti,ämmö,ämmä,isoämmö,isoäiti
 cousin,serkku,šeukku,serkku,seukku,šerkku
 child,lapsi,lapši,lapsi,laspi,laapsi
 grandchild,lapsenlapsi,punukka,lapšenlapši,punnukka,lapšukka
-,,,,,
-Food and drinks,,,,,
 Apple,Omena,Omena,omenna,aple,omppu
 Banana,Banaani,Banani,panani,banan´i,panaani
 Milk,Maito,Maito,mamma,milka,maitu
@@ -44,15 +35,8 @@ Curd,Rahka,rahka,rahku,raahku,rahukka
 Porridge,puuro,huttu,huttui,huttuo,puurro
 Cheese,Juusto,juušto,juustelo,Juuštelo,juuto
 Rice,Riisi,riissu,riissi,riišši,riiši
-,,,,,
-,,,,,
-,,,,,
-Home related words,,,,,
 sauna,sauna,kyly,kylvy,kylpy,sauna
 family,perhe,pereh,perhe,perehe,peerhe
-,,,,,
-,,,,,
-boby parts,,Ihmisen vartalonošat,,,
 head,pää,piä,piäs,päi,pää
 eye,silmä,šilmä,silmä,silimä,šilimä
 nose,nenä,nenä,nenu,nenäini,nennä
@@ -77,9 +61,6 @@ calf,pohje,pohkie,pohje,pohke,pohkia
 ankle,nilkka,nilkka,n´il´ka,nil´kka,n´ilkka
 heel,kantapää,kantapiä,kantappiä,kantepiä,kannalpiä
 leg,sääri,šiäri,šääri,siäri,sääri
-,,,,,
-,,,,,
-Days of the week,Viikonpäivät,Netälinpäivät,,,
 Monday,maanantai,enšiarki,maanantaini,ensiarki,ensimmäiniarki
 Tuesday,tiistai,toiniarki,toinearki,tiistaini,toisimmainiarki
 Wednesday,keskiviikko,Serota,kekimmäiniarki,keskiarki,serokkaini
@@ -88,9 +69,6 @@ Friday,perjantai,piätinččä,piätäntšä,piätinkkä,piätintčä
 Saturday,lauantai,šuovatta,suovatta,lauantaini,šuovata
 Sunday,sunnuntai,pyhäpäivä,pyhäpiävä,sunnuntaini,pyhätšä
 Week,viikko,netäli,viikkoni,netäl'l'i,viikko
-,,,,,
-,,,,,
-Months,Kuukaudet,Kuukauvet,,,
 January,tammikuu,pakkaiskuu,pakkaskuu,pakkaiškuu,pakkaškuu
 February,helmikuu,tuiskukuu,tuiskutuskuu,tuiškukuu,tuiskuu
 March,maaliskuu,kevätkuu,kevväänkuu,keväskuu,keväškuu
@@ -103,9 +81,6 @@ September,syyskuu,šyyškuu,šyyskuu,syyškuu,sykysykuu
 October,lokakuu,šajekuu,sajekuu,šadekuu,lokakuu
 November,marraskuu,pimiekuu,pimiäkuu,hämäräkuu,pimmeekuu
 December,joulukuu,talvikuu,talavikuu,tal´vikuu,rostuokuu
-,,,,,
-,,,,,
-Numbers,Numerot,,,,
 One,Yksi,Yksi,ykši,yhe,yksil
 Two,Kaksi,Kakši,kaksis,kaksi,Kakš
 Three,Kolme,Kolme,kolome,komme,kol´me
