@@ -19,6 +19,8 @@ environment:
 dependencies:
   universal_html: ^1.1.4
   web_socket_channel: ^1.0.15
+  audioplayers: ^0.14.0
+  just_audio: ^0.1.0
   csv: ^4.0.3
   flutter:
     sdk: flutter
@@ -50,6 +52,21 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/cardgame.csv
+    - assets/kalevala1.csv
+    - assets/characters/aino.png
+    - assets/characters/ilmarinen.png
+    - assets/characters/joukahainen.png
+    - assets/characters/kullervo.png
+    - assets/characters/kyllikki.png
+    - assets/characters/lemminkainen.png
+    - assets/characters/lemminkaisenaiti.png
+    - assets/characters/louhi.png
+    - assets/characters/marjatta.png
+    - assets/characters/pohjolantyttaret.png
+    - assets/characters/sampo.png
+    - assets/characters/vainamoinen.png
+    - assets/test.mp3
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
