@@ -36,18 +36,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         icon: Icon(Icons.contacts,
           color: Colors.green,
           size: 30.0,
-        )),
-    Tab(text: 'Kalevala',
+        )
+    ),
+    Tab(
+        text: 'Kalevala',
         icon: Icon(Icons.face,
       color: Colors.green,
       size: 30.0,
     )),
-    Tab(text: 'Sanakirja',
+    Tab(
+        text: 'Sanakirja',
         icon: Icon(Icons.search,
           color: Colors.green,
           size: 30.0,
         )),
-    Tab(text: 'Palkinto',
+    Tab(
+        text: 'Palkinto',
         icon: Icon(Icons.star,
           color: Colors.green,
           size: 30.0,

@@ -4,7 +4,7 @@ import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
 
-import 'dart:html' as html;
+//import 'dart:html' as html;
 
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -16,7 +16,7 @@ class CardGame extends StatefulWidget {
 class _CardGameState extends State<CardGame> {
 
 
-  html.AudioElement audio;
+//  html.AudioElement audio;
 
   List<List<dynamic>> questions;
 
@@ -28,7 +28,7 @@ class _CardGameState extends State<CardGame> {
     super.initState();
   }
   Future _getThingsOnStartup() async {
-    await loadAsset('cardgame.csv').then((dynamic output) {
+    await loadAsset('assets/cardgame.csv').then((dynamic output) {
       var csvRaw = output;
 //      print(csvRaw);
       List<List<dynamic>> csvTable = CsvToListConverter().convert(output);

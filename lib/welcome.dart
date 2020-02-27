@@ -297,7 +297,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.12),
                   child: Image.asset(
-                    "taptostart.png",
+                    "assets/taptostart.png",
                     height: 55.0,
                   ),
                 ),

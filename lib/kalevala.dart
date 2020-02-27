@@ -28,7 +28,7 @@ class _KalevalaState extends State<Kalevala> {
     super.initState();
   }
   Future _getThingsOnStartup() async {
-    await loadAsset('kalevala1.csv').then((dynamic output) {
+    await loadAsset('assets/kalevala1.csv').then((dynamic output) {
       var csvRaw = output;
       print(csvRaw);
       List<List<dynamic>> csvTable = CsvToListConverter().convert(output);
