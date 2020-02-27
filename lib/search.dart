@@ -209,9 +209,9 @@ class DataSearch extends SearchDelegate<String> {
                     ),
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey[100],
-                      child: Text(dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].word.substring(0,2)),
+                      child: Text(dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].word.substring(0,2)),
                     ),
-                    children: dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].examples.map((m) {
+                    children: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].examples.map((m) {
                       return ListTile(
                         title: Text(
                           m.toString(),
