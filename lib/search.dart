@@ -18,6 +18,7 @@ class _SearchState extends State<Search> {
   Widget cusSearchBar = Text('Kirjoita tähän :)');
 
 
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -46,6 +47,7 @@ class _SearchState extends State<Search> {
 //                  this.cusSearchBar = Text('Kirjoita tähän :)');
 //                }
 //              });
+
             },
             icon: cusIcon,
           ),
@@ -76,6 +78,8 @@ class _SearchState extends State<Search> {
 
   }
 }
+
+
 
 class DataSearch extends SearchDelegate<String> {
 
@@ -166,7 +170,9 @@ class DataSearch extends SearchDelegate<String> {
             case ConnectionState.done:
               if (snapshot.hasError) return null;
               return ListView.builder(
-                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length > 30 ? 30 : dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length ,
+//                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase()) || w.definition.startsWith(query.toLowerCase())).toList().length > 30 ? 30 : dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase()) || w.definition.startsWith(query.toLowerCase())).toList().length ,
+//                itemCount: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length ,
+                itemCount: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length,
                 itemBuilder: (context, index) => Card(
                   color: Colors.white,
                   elevation: 0.0,
@@ -178,7 +184,7 @@ class DataSearch extends SearchDelegate<String> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
-                              dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].word,
+                              dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].word,
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold,
@@ -189,7 +195,7 @@ class DataSearch extends SearchDelegate<String> {
 //                                  selectAll: true)
                           ),
                           Text(
-                              dictionary.entries.where((w)=> w.definition.startsWith(query)).toList()[index].definition,
+                              dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].definition,
                               style: TextStyle(
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.normal,
@@ -203,9 +209,9 @@ class DataSearch extends SearchDelegate<String> {
                     ),
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey[100],
-                      child: Text(dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].word.substring(0,2)),
+                      child: Text(dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].word.substring(0,2)),
                     ),
-                    children: dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].examples.map((m) {
+                    children: dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList()[index].examples.map((m) {
                       return ListTile(
                         title: Text(
                           m.toString(),
@@ -244,7 +250,8 @@ class DataSearch extends SearchDelegate<String> {
             case ConnectionState.done:
               if (snapshot.hasError) return null;
               return ListView.builder(
-                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length > 30 ? 30 : dictionary.entries.where((w)=> w.word.startsWith(query)).toList().length ,
+//                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase())).toList().length ,
+                itemCount: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length,
                 itemBuilder: (context, index) => Card(
                   color: Colors.white,
                   elevation: 0.0,
@@ -256,7 +263,7 @@ class DataSearch extends SearchDelegate<String> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
-                            dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].word,
+                            dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].word,
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -267,7 +274,7 @@ class DataSearch extends SearchDelegate<String> {
 //                              selectAll: true)
                           ),
                           Text(
-                            dictionary.entries.where((w)=> w.definition.startsWith(query)).toList()[index].definition,
+                            dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].definition,
                             style: TextStyle(
                               fontSize: 22.0,
                               fontWeight: FontWeight.normal,
@@ -281,9 +288,9 @@ class DataSearch extends SearchDelegate<String> {
                     ),
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey[100],
-                      child: Text(dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].word.substring(0,2)),
+                      child: Text(dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].word.substring(0,2)),
                     ),
-                    children: dictionary.entries.where((w)=> w.word.startsWith(query)).toList()[index].examples.map((m) {
+                    children: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].examples.map((m) {
                       return ListTile(
                         title: Text(
                           m.toString(),
