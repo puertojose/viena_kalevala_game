@@ -1,19 +1,9 @@
 ## Running example:
  https://puertojose.github.io/viena_kalevala_game/
+ 
+# Kalevala Adventure
 
-# viena_kalevala_game
+This is a prototype for a language learning game using the Kelavala epic novel.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ Characters images and description taken from http://www03.edu.fi/oppimateriaalit/sammon_salat/characterindex.html
+ Dictionary Data taken from http://kaino.kotus.fi/cgi-bin/kks/karjala.cgi
