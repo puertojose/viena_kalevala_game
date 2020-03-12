@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'dart:math';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
+if (dart.library.html) 'package:viena_kalevala_game/audio_web.dart'; // dart:html implementation
+
 class Kalevala extends StatefulWidget {
   @override
   _KalevalaState createState() => _KalevalaState();
@@ -14,6 +17,7 @@ class _KalevalaState extends State<Kalevala> {
   int _correctPosition = -1;
   bool _correctAnimation = false;
   Color _nextButtonColor =Colors.white;
+  int _timeLeft = 20;
 
   String _playerAnswer = "";
 
@@ -26,6 +30,7 @@ class _KalevalaState extends State<Kalevala> {
       print('Async done');
     });
     super.initState();
+
   }
   Future _getThingsOnStartup() async {
     await loadAsset('assets/kalevala1.csv').then((dynamic output) {
@@ -161,13 +166,25 @@ class _KalevalaState extends State<Kalevala> {
                   ),
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      'Kysymys $_questionNumber',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: Column (
+                      children: <Widget>[
+                        Text(
+                          'Kysymys $_timeLeft',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Kysymys $_questionNumber',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )
+
                   ),
                 ),
                 Padding(
@@ -182,13 +199,14 @@ class _KalevalaState extends State<Kalevala> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    child: Text(
-                      '$target',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w800),
-                    ),
+                      child: Text(
+                        '$target',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w800),
+                        textAlign: TextAlign.center,
+                      ),
                   ),
                 ),
                 Padding(
@@ -200,6 +218,7 @@ class _KalevalaState extends State<Kalevala> {
                           color: Colors.black45,
                           fontSize: 20.0,
                           fontWeight: FontWeight.w800),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -232,7 +251,7 @@ class _KalevalaState extends State<Kalevala> {
                           String b = correctAnswer.trim();
                           print(a==b);
                           if (a==b){
-
+                            playAudio('test.mp3');
                             _correctAnimation=true;
                             _nextButtonColor= Colors.greenAccent;
                             print('correct');
@@ -291,9 +310,11 @@ class _KalevalaState extends State<Kalevala> {
 
 
     String kar;
-    kar = questions[_questionNumber][1];
+    kar = questions[(_questionNumber*2)-1][1];
+    kar = kar + " " + questions[_questionNumber*2][1];
     correctAnswer = kar;
-    target = questions[_questionNumber][0];
+    target = questions[(_questionNumber*2)-1][0];
+    target = target + " " + questions[_questionNumber*2][0];
     print(target.split(" "));
     var options = kar.split(" ");
     print(target);

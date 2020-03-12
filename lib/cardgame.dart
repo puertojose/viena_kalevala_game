@@ -4,6 +4,9 @@ import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
 
+import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
+if (dart.library.html) 'package:viena_kalevala_game/audio_web.dart'; // dart:html implementation
+
 //import 'dart:html' as html;
 
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -143,8 +146,8 @@ class _CardGameState extends State<CardGame> {
           borderRadius: BorderRadius.circular(24.0),
           shadowColor: Color(0x802196F3),
           child: Container(
-            width: 330,
-            height: 391,
+            width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
+            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/3,
             child: Column(
 
               children: <Widget>[
@@ -218,9 +221,8 @@ class _CardGameState extends State<CardGame> {
                   }()),
                     )),
                 Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
+                  padding: const EdgeInsets.only(top:17.0),
                   child: Container(
-
                     child: RaisedButton(
                         color: _nextButtonColor,
                         child: Text(
@@ -233,6 +235,7 @@ class _CardGameState extends State<CardGame> {
                         onPressed: () {
 
                           if (this._correctAnswer == true) {
+                            playAudio('test.mp3');
                             _correctAnimation=true;
                             _nextButtonColor= Colors.greenAccent;
                             print('correct');
