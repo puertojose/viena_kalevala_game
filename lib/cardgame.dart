@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
+import 'package:quiver/async.dart';
 
 import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
 if (dart.library.html) 'package:viena_kalevala_game/audio_web.dart'; // dart:html implementation
@@ -26,6 +27,7 @@ class _CardGameState extends State<CardGame> {
   @override
   void initState() {
     _getThingsOnStartup().then((value){
+      startTimer();
       print('Async done');
     });
     super.initState();
@@ -48,7 +50,7 @@ class _CardGameState extends State<CardGame> {
   int duration = 1000 * 30;
   int durationBackup;
 
-  var coins = 0;
+  var coins = 10;
 
   var bosses = Utils.getBosses();
   var bossIndex = 0;
@@ -56,6 +58,29 @@ class _CardGameState extends State<CardGame> {
   var level = 1;
 
   var earnedCoin = false;
+  var _start=45;
+  var _current=45;
+  var aux = 10;
+
+  void startTimer() {
+    CountdownTimer countDownTimer = new CountdownTimer(
+      new Duration(seconds: _start),
+      new Duration(seconds: 1),
+    );
+
+    var sub = countDownTimer.listen(null);
+    sub.onData((duration) {
+      setState(() {
+        _current = _start - duration.elapsed.inSeconds;
+      });
+    });
+
+    sub.onDone(() {
+      print("Done");
+      sub.cancel();
+    });
+  }
+
 
   String get timerString {
     Duration duration = controller.duration * controller.value;
@@ -101,7 +126,7 @@ class _CardGameState extends State<CardGame> {
         child: Text(
           "+20",
           style: Utils.textStyle(45.0, color: Colors.green),
-          
+
         ),
       );
     } else {
@@ -146,8 +171,8 @@ class _CardGameState extends State<CardGame> {
           borderRadius: BorderRadius.circular(24.0),
           shadowColor: Color(0x802196F3),
           child: Container(
-            width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
-            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/3,
+            width: 380,
+            height: 400,
             child: Column(
 
               children: <Widget>[
@@ -177,13 +202,13 @@ class _CardGameState extends State<CardGame> {
                   width: MediaQuery.of(context).size.width/4,
                   //color: new Color(0xffffc107),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
+                    borderRadius: BorderRadius.circular(16.0),
                     color: setColorProgress(coins),
                   ),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                      '$coins',
+                      '$coins   $_current',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.0,
@@ -192,7 +217,7 @@ class _CardGameState extends State<CardGame> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(18.0),
                   child: Container(
                     child: Text(
                       'Valitse oikea käännös',
@@ -201,7 +226,7 @@ class _CardGameState extends State<CardGame> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(18.0),
                   child: Container(
                     child: Text(
                       '$target',
@@ -214,11 +239,11 @@ class _CardGameState extends State<CardGame> {
                 ),
                 Container(
                     child: Wrap(
-                  spacing: 5.0,
-                  runSpacing: 5.0,
-                  children: List.unmodifiable(() sync* {
-                    yield* _buildChoiceList();
-                  }()),
+                      spacing: 5.0,
+                      runSpacing: 5.0,
+                      children: List.unmodifiable(() sync* {
+                        yield* _buildChoiceList();
+                      }()),
                     )),
                 Padding(
                   padding: const EdgeInsets.only(top:17.0),
@@ -313,13 +338,13 @@ class _CardGameState extends State<CardGame> {
     List<Widget> choices = List();
     _choices.forEach((option,k){
       choices.add(Container(
-        padding: const EdgeInsets.all(2.0),
+        padding: const EdgeInsets.all(1.0),
         child: ChoiceChip(
           label: Text(option),
           labelStyle: TextStyle(
-              color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           backgroundColor: Color(0xffededed),
           selectedColor: Colors.greenAccent,
@@ -339,7 +364,7 @@ class _CardGameState extends State<CardGame> {
 
   void _loadNextQuestion() {
     Future.delayed(const Duration(milliseconds: 400), () {
-    _correctAnimation=false;
+      _correctAnimation=false;
 
 
       setState(() {
@@ -357,7 +382,7 @@ class _CardGameState extends State<CardGame> {
 //    if(coins <= 20) return Colors.white;
 //    else if (coins >=20 && coins <=40) return Colors.greenAccent;
 //    else return Colors.green;
-  return Color.fromRGBO(0, 1+ (coins/10).round()%254, 0, 0.1);
+    return Color.fromRGBO(0, 1+ (coins/10).round()%254, 0, 0.1);
   }
 
   void updateQuestion() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
+import 'package:quiver/async.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
@@ -31,7 +32,10 @@ class _KalevalaState extends State<Kalevala> {
     });
     super.initState();
 
+
   }
+
+
   Future _getThingsOnStartup() async {
     await loadAsset('assets/kalevala1.csv').then((dynamic output) {
       var csvRaw = output;
@@ -66,9 +70,9 @@ class _KalevalaState extends State<Kalevala> {
         child: ChoiceChip(
           label: Text(option),
           labelStyle: TextStyle(
-              color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           backgroundColor: Color(0xffededed),
           selectedColor: _selectedColor,
@@ -165,25 +169,25 @@ class _KalevalaState extends State<Kalevala> {
                     color: Colors.greenAccent,
                   ),
                   child: Align(
-                    alignment: Alignment.center,
-                    child: Column (
-                      children: <Widget>[
-                        Text(
-                          'Kysymys $_timeLeft',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Kysymys $_questionNumber',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
+                      alignment: Alignment.center,
+                      child: Column (
+                        children: <Widget>[
+                          Text(
+                            'Kysymys $_timeLeft',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'Kysymys $_questionNumber',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
 
                   ),
                 ),
@@ -199,14 +203,14 @@ class _KalevalaState extends State<Kalevala> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                      child: Text(
-                        '$target',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w800),
-                        textAlign: TextAlign.center,
-                      ),
+                    child: Text(
+                      '$target',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w800),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 Padding(

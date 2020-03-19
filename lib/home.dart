@@ -32,18 +32,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
 
   final List<Tab> myTabs = <Tab>[
-    Tab(text: 'Kortit',
-        icon: Icon(Icons.contacts,
-          color: Colors.green,
-          size: 30.0,
-        )
+    Tab(
+      text: 'Kortit',
+      icon: Icon(Icons.contacts,
+        color: Colors.green,
+        size: 30.0,
+      )
+      ,
+      iconMargin: EdgeInsets.all(1.0),
+//      child: Text("hey")
     ),
     Tab(
         text: 'Kalevala',
         icon: Icon(Icons.face,
-      color: Colors.green,
-      size: 30.0,
-    )),
+          color: Colors.green,
+          size: 30.0,
+        )),
     Tab(
         text: 'Sanakirja',
         icon: Icon(Icons.search,
@@ -113,21 +117,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
 
           else {
-          final String label = tab.text.toLowerCase();
-          return Center(
-            child: Chip(
+            final String label = tab.text.toLowerCase();
+            return Center(
+                child: Chip(
 //              avatar: CircleAvatar(
 //                backgroundColor: Colors.grey.shad  e800,
 //                child: Text('AB'),
 //              ),
-              label: Text(label),
-            )
+                  label: Text(label),
+                )
 //            child: Text(
 //              'This is the $label tab',
 //              style: const TextStyle(fontSize: 36),
 //
 //            ),
-          );
+            );
           }
         }).toList(),
       ),
