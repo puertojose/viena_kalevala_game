@@ -21,7 +21,7 @@ class _KalevalaState extends State<Kalevala> {
   int _timeLeft = 20;
 
   String _playerAnswer = "";
-
+  var coins = 10;
 
   List<List<dynamic>> questions;
 
@@ -66,11 +66,12 @@ class _KalevalaState extends State<Kalevala> {
     _choices.forEach((option,k){
       Color _selectedColor;
       choices.add(Container(
-        padding: const EdgeInsets.all(2.0),
+
+        padding: const EdgeInsets.all(1.0),
         child: ChoiceChip(
           label: Text(option),
           labelStyle: TextStyle(
-              color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: MediaQuery.of(context).size.width/30 > 30? 30:MediaQuery.of(context).size.width/30  , fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -156,8 +157,8 @@ class _KalevalaState extends State<Kalevala> {
           borderRadius: BorderRadius.circular(24.0),
           shadowColor: Color(0x802196F3),
           child: Container(
-            width: 380,
-            height: 400,
+            width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
+            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/4.8,
             child: Column(
               children: <Widget>[
                 Container(
@@ -173,13 +174,6 @@ class _KalevalaState extends State<Kalevala> {
                       child: Column (
                         children: <Widget>[
                           Text(
-                            'Kysymys $_timeLeft',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
                             'Kysymys $_questionNumber',
                             style: TextStyle(
                                 color: Colors.black,
@@ -189,6 +183,25 @@ class _KalevalaState extends State<Kalevala> {
                         ],
                       )
 
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width/4,
+                  //color: new Color(0xffffc107),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    color: Colors.grey,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      '$coins   ',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
                 Padding(
@@ -203,11 +216,12 @@ class _KalevalaState extends State<Kalevala> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
+                    height: MediaQuery.of(context).size.height/13,
                     child: Text(
                       '$target',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width/20 > 35 ? 35:MediaQuery.of(context).size.width/20,
                           fontWeight: FontWeight.w800),
                       textAlign: TextAlign.center,
                     ),
@@ -216,11 +230,12 @@ class _KalevalaState extends State<Kalevala> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
+                    height: MediaQuery.of(context).size.height/13,
                     child: Text(
                       '$_playerAnswer',
                       style: TextStyle(
                           color: Colors.black45,
-                          fontSize: 20.0,
+                          fontSize: MediaQuery.of(context).size.width/20 > 35? 35:MediaQuery.of(context).size.width/20,
                           fontWeight: FontWeight.w800),
                       textAlign: TextAlign.center,
                     ),
@@ -228,14 +243,14 @@ class _KalevalaState extends State<Kalevala> {
                 ),
                 Container(
                     child: Wrap(
-                      spacing: 5.0,
-                      runSpacing: 5.0,
+                      spacing: 4.0,
+                      runSpacing: 4.0,
                       children: List.unmodifiable(() sync* {
                         yield* _buildChoiceList();
                       }()),
                     )),
                 Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: Container(
 
                     child: RaisedButton(
