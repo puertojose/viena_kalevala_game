@@ -4,6 +4,7 @@ import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
 import 'package:quiver/async.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
 if (dart.library.html) 'package:viena_kalevala_game/audio_web.dart'; // dart:html implementation
@@ -17,17 +18,24 @@ class CardGame extends StatefulWidget {
   _CardGameState createState() => _CardGameState();
 }
 
+enum TtsState { playing, stopped }
+
 class _CardGameState extends State<CardGame> {
 
 
 //  html.AudioElement audio;
 
   List<List<dynamic>> questions;
-
+  FlutterTts flutterTts = FlutterTts();
+  var ttsState;
+  Future _speak(text) async{
+    var result = await flutterTts.speak(text);
+    if (result == 1) setState(() => ttsState = TtsState.playing);
+  }
   @override
   void initState() {
     _getThingsOnStartup().then((value){
-      startTimer();
+      startTimer(20,20);
       print('Async done');
     });
     super.initState();
@@ -40,6 +48,7 @@ class _CardGameState extends State<CardGame> {
       questions = csvTable;
       print(questions);
     });
+    await flutterTts.setLanguage("fi-FI");
   }
   Future<String> loadAsset(String path) async {
     return await rootBundle.loadString(path);
@@ -62,16 +71,17 @@ class _CardGameState extends State<CardGame> {
   var _current=45;
   var aux = 10;
 
-  void startTimer() {
+  void startTimer(time,current) {
+    _current = current;
     CountdownTimer countDownTimer = new CountdownTimer(
-      new Duration(seconds: _start),
+      new Duration(seconds: time),
       new Duration(seconds: 1),
     );
 
     var sub = countDownTimer.listen(null);
     sub.onData((duration) {
       setState(() {
-        _current = _start - duration.elapsed.inSeconds;
+        _current = time - duration.elapsed.inSeconds;
       });
     });
 
@@ -124,7 +134,7 @@ class _CardGameState extends State<CardGame> {
       return Padding(
         padding: const EdgeInsets.only(left: 0.0),
         child: Text(
-          "+20",
+          "+1",
           style: Utils.textStyle(45.0, color: Colors.green),
 
         ),
@@ -171,8 +181,8 @@ class _CardGameState extends State<CardGame> {
           borderRadius: BorderRadius.circular(24.0),
           shadowColor: Color(0x802196F3),
           child: Container(
-            width: 380,
-            height: 400,
+            width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
+            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/4.8,
             child: Column(
 
               children: <Widget>[
@@ -217,7 +227,7 @@ class _CardGameState extends State<CardGame> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Container(
                     child: Text(
                       'Valitse oikea käännös',
@@ -226,28 +236,32 @@ class _CardGameState extends State<CardGame> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Container(
+                    height: MediaQuery.of(context).size.height/10,
                     child: Text(
                       '$target',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 42.0,
+                          fontSize: MediaQuery.of(context).size.width/10 > 65 ? 65:MediaQuery.of(context).size.width/10,
                           fontWeight: FontWeight.w800),
                     ),
                   ),
                 ),
                 Container(
+                    alignment: AlignmentDirectional.topCenter,
+                    height: MediaQuery.of(context).size.height/6,
                     child: Wrap(
-                      spacing: 5.0,
-                      runSpacing: 5.0,
+                      spacing: 4.0,
+                      runSpacing: 4.0,
                       children: List.unmodifiable(() sync* {
                         yield* _buildChoiceList();
                       }()),
                     )),
                 Padding(
-                  padding: const EdgeInsets.only(top:17.0),
+                  padding: const EdgeInsets.only(top:20.0),
                   child: Container(
+                    height: MediaQuery.of(context).size.height/12,
                     child: RaisedButton(
                         color: _nextButtonColor,
                         child: Text(
@@ -259,18 +273,34 @@ class _CardGameState extends State<CardGame> {
                         ),
                         onPressed: () {
 
-                          if (this._correctAnswer == true) {
+                          if (this._correctAnswer == true && _current >0) {
                             playAudio('test.mp3');
+
                             _correctAnimation=true;
                             _nextButtonColor= Colors.greenAccent;
                             print('correct');
                             earnedCoin = true;
-                            coins = coins +20;
+                            coins = coins +1;
                             _loadNextQuestion();
-                          } else {
+                          } else if (_current >0){
                             _nextButtonColor= Colors.redAccent;
                             earnedCoin = false;
                             print('incorrect');
+                          } else if (this._correctAnswer == true && _current <=0){
+                            _correctAnimation=true;
+                            _nextButtonColor= Colors.greenAccent;
+                            print('correct');
+                            earnedCoin = true;
+                            coins = coins +1;
+                            _loadNextQuestion();
+                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
+                            if(coins<20) startTimer(coins,coins);
+                            else startTimer(20,20);
+                          }
+                          else{
+                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
+                            if(coins<20) startTimer(coins,coins);
+                            else startTimer(20,20);
                           }
                           setState(() {});
                         },
@@ -338,11 +368,12 @@ class _CardGameState extends State<CardGame> {
     List<Widget> choices = List();
     _choices.forEach((option,k){
       choices.add(Container(
+//        height: MediaQuery.of(context).size.height/18,
         padding: const EdgeInsets.all(1.0),
         child: ChoiceChip(
           label: Text(option),
           labelStyle: TextStyle(
-              color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: MediaQuery.of(context).size.width/30 > 30? 30:MediaQuery.of(context).size.width/30, fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -350,6 +381,7 @@ class _CardGameState extends State<CardGame> {
           selectedColor: Colors.greenAccent,
           selected: _selectedChoice == option,
           onSelected: (selected) {
+            _speak(option);
             setState(() {
               _selectedChoice = option;
               _correctAnswer=k;
@@ -463,3 +495,27 @@ class _CardGameState extends State<CardGame> {
 //    );
 //  }
 
+void _openCustomDialog(context, title, content) {
+  showGeneralDialog(barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: AlertDialog(
+              backgroundColor: Color.fromRGBO(255, 255, 255,60.0),
+              contentPadding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/4, MediaQuery.of(context).size.height/4, MediaQuery.of(context).size.width/4, MediaQuery.of(context).size.height/4),
+              shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Text(title),
+              content: Text(content),
+            ),
+          ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation1, animation2) {});
+}
