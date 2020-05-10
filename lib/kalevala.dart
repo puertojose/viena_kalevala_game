@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
-import 'package:quiver/async.dart';
+//import 'package:quiver/async.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
