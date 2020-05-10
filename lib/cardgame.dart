@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:viena_kalevala_game/timer_animation.dart';
 import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
@@ -20,7 +21,7 @@ class CardGame extends StatefulWidget {
 
 enum TtsState { playing, stopped }
 
-class _CardGameState extends State<CardGame> {
+class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 
 
 //  html.AudioElement audio;
@@ -32,13 +33,26 @@ class _CardGameState extends State<CardGame> {
     var result = await flutterTts.speak(text);
     if (result == 1) setState(() => ttsState = TtsState.playing);
   }
+
+  AnimationController controller;
+
+  String get timerString {
+    Duration duration = controller.duration * controller.value;
+    return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}:${(duration.inMilliseconds % 1000).toString().substring(0,1)}';
+  }
+
   @override
   void initState() {
     _getThingsOnStartup().then((value){
-      startTimer(20,20);
+      //startTimer(13,13);
       print('Async done');
+      _openCustomDialog(context, "Tervetuloa Karjalan korttipeliin.", "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
     });
     super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 10),
+    );
   }
   Future _getThingsOnStartup() async {
     await loadAsset('assets/cardgame.csv').then((dynamic output) {
@@ -54,8 +68,6 @@ class _CardGameState extends State<CardGame> {
     return await rootBundle.loadString(path);
   }
 
-
-  AnimationController controller;
   int duration = 1000 * 30;
   int durationBackup;
 
@@ -65,15 +77,17 @@ class _CardGameState extends State<CardGame> {
   var bossIndex = 0;
 
   var level = 1;
+  var _firstTime =1;
 
   var earnedCoin = false;
   var _start=45;
   var _current=45;
   var aux = 10;
+  CountdownTimer countDownTimer;
 
   void startTimer(time,current) {
     _current = current;
-    CountdownTimer countDownTimer = new CountdownTimer(
+    countDownTimer = new CountdownTimer(
       new Duration(seconds: time),
       new Duration(seconds: 1),
     );
@@ -89,12 +103,6 @@ class _CardGameState extends State<CardGame> {
       print("Done");
       sub.cancel();
     });
-  }
-
-
-  String get timerString {
-    Duration duration = controller.duration * controller.value;
-    return '${(duration.inMinutes).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
 
@@ -150,30 +158,6 @@ class _CardGameState extends State<CardGame> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-//      appBar: AppBar(
-//        leading: IconButton(
-//            icon: Icon(
-//              Icons.ac_unit,
-//              color: Colors.black,
-//            ),
-//            onPressed: () {}),
-//        title: Text(
-//          "Synonym Flashcards",
-//          style: TextStyle(
-//            color: Colors.black,
-//          ),
-//        ),
-//        actions: <Widget>[
-//          IconButton(
-//              icon: Icon(
-//                Icons.note_add,
-//                color: Colors.black,
-//              ),
-//              onPressed: () {
-//                //
-//              }),
-//        ],
-//      ),
       body: Center(
         child: Material(
           color: Colors.white,
@@ -196,16 +180,40 @@ class _CardGameState extends State<CardGame> {
                     borderRadius: BorderRadius.circular(12.0),
                     color: Colors.greenAccent,
                   ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Kysymys $_questionNumber  ',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  child: AnimatedBuilder(
+                    animation: controller,
+                    builder: (BuildContext context, Widget child) {
+                      return CustomPaint(
+                        painter: TimerPainter(
+                          animation: controller,
+                          backgroundColor: Colors.white,
+                          color: Colors.greenAccent,
+
+                        ));
+                    },
+//                    child: AnimatedBuilder(
+//                      animation: controller,
+//                      builder: (BuildContext context, Widget child) {
+//                        return Text(
+//                          timerString,
+//                          style: TextStyle(
+//                              color: Colors.black,
+//                              fontSize: 24.0,
+//                              fontWeight: FontWeight.bold),
+//                        );
+//                      }
+//                    ),
                   ),
+//                  child: Align(
+//                    alignment: Alignment.center,
+//                    child: Text(
+//                      'Kysymys $_questionNumber  ',
+//                      style: TextStyle(
+//                          color: Colors.black,
+//                          fontSize: 24.0,
+//                          fontWeight: FontWeight.bold),
+//                    ),
+//                  ),
                 ),
                 Container(
                   height: 20,
@@ -217,12 +225,17 @@ class _CardGameState extends State<CardGame> {
                   ),
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Text(
-                      '$coins   $_current',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold),
+                    child: AnimatedBuilder(
+                        animation: controller,
+                        builder: (BuildContext context, Widget child) {
+                          return Text(
+                            timerString +' $coins',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          );
+                        }
                     ),
                   ),
                 ),
@@ -273,8 +286,14 @@ class _CardGameState extends State<CardGame> {
                         ),
                         onPressed: () {
 
-                          if (this._correctAnswer == true && _current >0) {
-                            playAudio('test.mp3');
+                          if (controller.isAnimating) {
+
+                          if (this._correctAnswer == true) {
+
+//                            //countDownTimer.cancel();
+//                            if(coins<10) {
+//                            }
+//                            else controller.duration = Duration(seconds:10);
 
                             _correctAnimation=true;
                             _nextButtonColor= Colors.greenAccent;
@@ -282,27 +301,112 @@ class _CardGameState extends State<CardGame> {
                             earnedCoin = true;
                             coins = coins +1;
                             _loadNextQuestion();
-                          } else if (_current >0){
+//                            controller.reverse(
+//                                from: controller.value == 0.0
+//                                    ? 1.0
+//                                    : controller.value);
+
+                            controller.reset();
+                            controller.reverse(
+                                from: controller.value == 0.0
+                                    ? 1.0
+                                    : controller.value);
+                            controller.duration = Duration(seconds:10);
+                            playAudio('test.mp3');
+                          } else {
                             _nextButtonColor= Colors.redAccent;
                             earnedCoin = false;
                             print('incorrect');
-                          } else if (this._correctAnswer == true && _current <=0){
+                          }
+
+                            //controller.stop(canceled: true);
+                          }
+
+                          else  if (this._correctAnswer == true && _firstTime==0) {
+                            _correctAnimation=true;
+                            //_nextButtonColor= Colors.greenAccent;
+                            print('correct');
+                            earnedCoin = true;
+                            coins = coins +1;
+                            _loadNextQuestion();
+                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
+//                            if(coins<10) startTimer(coins,coins);
+//                            else startTimer(10,10);
+                            controller.duration = Duration(seconds:10);
+                            controller.reverse(
+                                from: controller.value == 0.0
+                                    ? 1.0
+                                    : controller.value);
+
+                            playAudio('test.mp3');
+                          } else if (this._correctAnswer == true &&  _firstTime==1){
+                            _nextButtonColor= Colors.greenAccent;
                             _correctAnimation=true;
                             _nextButtonColor= Colors.greenAccent;
                             print('correct');
                             earnedCoin = true;
                             coins = coins +1;
                             _loadNextQuestion();
-                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
-                            if(coins<20) startTimer(coins,coins);
-                            else startTimer(20,20);
+                            controller.duration = Duration(seconds:10);
+                            controller.reverse(
+                                from: controller.value == 0.0
+                                    ? 1.0
+                                    : controller.value);
+
+                            playAudio('test.mp3');
+                            _firstTime=0;
+                          } else if (this._correctAnswer == false &&  _firstTime==1){
+                            _nextButtonColor= Colors.redAccent;
+                            earnedCoin = false;
+                            print('incorrect');
+                          } else {
+                          _openCustomDialog(context, "Aikasi loppui :D", "this time you made: " +coins.toString()+" points ");
+//                            if(coins<10) startTimer(coins,coins);
+//                            else startTimer(10,10);
+                          coins = 10;
+                            _firstTime=1;
                           }
-                          else{
-                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
-                            if(coins<20) startTimer(coins,coins);
-                            else startTimer(20,20);
-                          }
-                          setState(() {});
+
+
+//
+//
+//
+//                          if (this._correctAnswer == true && _current >0) {
+//
+//                            countDownTimer.cancel();
+//                            if(coins<10) startTimer(coins,coins);
+//                            else startTimer(10,10);
+//                            playAudio('test.mp3');
+//
+//                            _correctAnimation=true;
+//                            _nextButtonColor= Colors.greenAccent;
+//                            print('correct');
+//                            earnedCoin = true;
+//                            coins = coins +1;
+//                            _loadNextQuestion();
+//                          } else if (_current >0){
+//                            _nextButtonColor= Colors.redAccent;
+//                            earnedCoin = false;
+//                            print('incorrect');
+//                          } else if (this._correctAnswer == true && _current <=0){
+//                            _correctAnimation=true;
+//                            _nextButtonColor= Colors.greenAccent;
+//                            print('correct');
+//                            earnedCoin = true;
+//                            coins = coins +1;
+//                            _loadNextQuestion();
+//                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
+////                            if(coins<10) startTimer(coins,coins);
+////                            else startTimer(10,10);
+//                            _current = 10;
+//                          }
+//                          else{
+//                            _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
+////                            if(coins<10) startTimer(coins,coins);
+////                            else startTimer(10,10);
+//                            _current = 10;
+//                          }
+//                          setState(() {});
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0))),
