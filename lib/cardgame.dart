@@ -4,7 +4,7 @@ import 'package:viena_kalevala_game/timer_animation.dart';
 import 'package:viena_kalevala_game/utils.dart';
 import 'package:csv/csv.dart';
 import 'dart:math';
-import 'package:quiver/async.dart';
+//import 'package:quiver/async.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:viena_kalevala_game/audio_noweb.dart' // Stub implementation
@@ -83,26 +83,26 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
   var _start=45;
   var _current=45;
   var aux = 10;
-  CountdownTimer countDownTimer;
+  //CountdownTimer countDownTimer;
 
   void startTimer(time,current) {
     _current = current;
-    countDownTimer = new CountdownTimer(
-      new Duration(seconds: time),
-      new Duration(seconds: 1),
-    );
+//    countDownTimer = new CountdownTimer(
+//      new Duration(seconds: time),
+//      new Duration(seconds: 1),
+//    );
 
-    var sub = countDownTimer.listen(null);
-    sub.onData((duration) {
-      setState(() {
-        _current = time - duration.elapsed.inSeconds;
-      });
-    });
+//    var sub = countDownTimer.listen(null);
+//    sub.onData((duration) {
+//      setState(() {
+//        _current = time - duration.elapsed.inSeconds;
+//      });
+//    });
 
-    sub.onDone(() {
-      print("Done");
-      sub.cancel();
-    });
+//    sub.onDone(() {
+//      print("Done");
+//      sub.cancel();
+//    });
   }
 
 
