@@ -31,7 +31,7 @@ class TimerPainter extends CustomPainter {
     //canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: -progress, height: size.height), paint);
     //canvas.drawArc(Offset.zero & size, math.pi * 1.5, -progress, false, paint);
 
-    TextSpan span = new TextSpan(style: new TextStyle(color: Colors.grey[600],fontSize:size.width/20,fontWeight: FontWeight.bold), text: text, );
+    TextSpan span = new TextSpan(style: new TextStyle(color: Colors.grey[600],fontSize:size.width/20 <=40 ? size.width/20:40,fontWeight: FontWeight.bold), text: text, );
     TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.left,textDirection: TextDirection.ltr);
     tp.layout(
       minWidth: 0,

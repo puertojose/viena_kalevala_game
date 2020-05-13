@@ -342,7 +342,7 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                           } else {
                             _nextButtonColor= Colors.redAccent;
                             earnedCoin = false;
-                            coins = coins -1 ;
+                            coins = coins -1 <= 0 ? 0 :coins -1 ;
                             print('incorrect');
                             controller.duration = Duration(seconds: secondsLeft - 1 >=0 ? secondsLeft - 1:0);
                             controller.reset();
@@ -396,7 +396,7 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                           } else if (this._correctAnswer == false &&  _firstTime==1){
                             _nextButtonColor= Colors.redAccent;
                             earnedCoin = false;
-                            coins = coins -1 ;
+                            coins = coins -1 <= 0 ? 0 :coins -1 ;
                             print('incorrect');
                             controller.duration = Duration(seconds: secondsLeft - 1 >=0 ? secondsLeft - 1:0);
                             controller.reset();
