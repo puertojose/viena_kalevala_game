@@ -350,6 +350,8 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                                 from: controller.value == 0.0
                                     ? 1.0
                                     : controller.value);
+
+                            playAudio('wrong.mp3');
                           }
 
                             //controller.stop(canceled: true);
@@ -402,6 +404,7 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                                 from: controller.value == 0.0
                                     ? 1.0
                                     : controller.value);
+                            playAudio('wrong.mp3');
                           } else {
                           _openCustomDialog(context, "Aikasi loppui :D", "this time you made: " +coins.toString()+" points ");
 //                            if(coins<10) startTimer(coins,coins);
