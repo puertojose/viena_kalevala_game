@@ -36,7 +36,14 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 
   AnimationController controller;
 
+  int get secondsLeft {
+    Duration duration = controller.duration * controller.value;
+    return duration.inSeconds % 60;
+  }
+
   String get timerString {
+    print(controller.duration);
+    print(controller.value);
     Duration duration = controller.duration * controller.value;
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}:${(duration.inMilliseconds % 1000).toString().substring(0,1)}';
   }
@@ -71,7 +78,7 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
   int duration = 1000 * 30;
   int durationBackup;
 
-  var coins = 10;
+  var coins = 0;
 
   var bosses = Utils.getBosses();
   var bossIndex = 0;
@@ -185,9 +192,11 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                     builder: (BuildContext context, Widget child) {
                       return CustomPaint(
                         painter: TimerPainter(
+                          text: timerString,
                           animation: controller,
                           backgroundColor: Colors.white,
-                          color: Colors.greenAccent,
+                          color: Color.fromRGBO(Colors.greenAccent.red, Colors.greenAccent.green, Colors.greenAccent.blue, 1.0-(controller.value/2))
+//                          color: Colors.greenAccent.,
 
                         ));
                     },
@@ -221,20 +230,27 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                   //color: new Color(0xffffc107),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.0),
-                    color: setColorProgress(coins),
+                    color: Colors.white,
+//                    color: setColorProgress(coins),
                   ),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: AnimatedBuilder(
                         animation: controller,
                         builder: (BuildContext context, Widget child) {
-                          return Text(
-                            timerString +' $coins',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
+                          return AnimatedDefaultTextStyle(
+                            style: earnedCoin
+                            ? TextStyle(
+                                color: Colors.green,
+                                fontSize: 21.0,
+                                fontWeight: FontWeight.bold)
+                            :
+                            TextStyle(
+                                color: Colors.red,
+                                fontSize: 21.0,
                                 fontWeight: FontWeight.bold),
-                          );
+                            duration: const Duration(milliseconds: 500),
+                            child: Text('$coins'));
                         }
                     ),
                   ),
@@ -299,24 +315,41 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                             _nextButtonColor= Colors.greenAccent;
                             print('correct');
                             earnedCoin = true;
-                            coins = coins +1;
+                            coins = coins +secondsLeft;
                             _loadNextQuestion();
 //                            controller.reverse(
 //                                from: controller.value == 0.0
 //                                    ? 1.0
 //                                    : controller.value);
 
+                            //controller.value((secondsLeft + 3));
+//                            controller.reverse(
+//                                from: controller.value == 0.0
+//                                    ? 1.0
+//                                    : controller.value);
+                            print("secondsLeft: " );
+                            print(secondsLeft);
+                            print("secondsLeft: " );
+                            print(secondsLeft);
+                            controller.duration = Duration(seconds:secondsLeft + 5 >= 15? 15 :secondsLeft + 5 );
+                            coins = coins + secondsLeft;
                             controller.reset();
                             controller.reverse(
                                 from: controller.value == 0.0
                                     ? 1.0
                                     : controller.value);
-                            controller.duration = Duration(seconds:10);
                             playAudio('test.mp3');
                           } else {
                             _nextButtonColor= Colors.redAccent;
                             earnedCoin = false;
+                            coins = coins -1 ;
                             print('incorrect');
+                            controller.duration = Duration(seconds: secondsLeft - 1 >=0 ? secondsLeft - 1:0);
+                            controller.reset();
+                            controller.reverse(
+                                from: controller.value == 0.0
+                                    ? 1.0
+                                    : controller.value);
                           }
 
                             //controller.stop(canceled: true);
@@ -327,12 +360,14 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                             //_nextButtonColor= Colors.greenAccent;
                             print('correct');
                             earnedCoin = true;
-                            coins = coins +1;
+                            coins = coins + secondsLeft;
                             _loadNextQuestion();
                             _openCustomDialog(context, "Your time ran out :D ", "this time you made: " +coins.toString()+" points ");
 //                            if(coins<10) startTimer(coins,coins);
 //                            else startTimer(10,10);
+                            coins = 0;
                             controller.duration = Duration(seconds:10);
+                            controller.reset();
                             controller.reverse(
                                 from: controller.value == 0.0
                                     ? 1.0
@@ -345,9 +380,10 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                             _nextButtonColor= Colors.greenAccent;
                             print('correct');
                             earnedCoin = true;
-                            coins = coins +1;
+                            coins = coins + secondsLeft;
                             _loadNextQuestion();
                             controller.duration = Duration(seconds:10);
+                            controller.reset();
                             controller.reverse(
                                 from: controller.value == 0.0
                                     ? 1.0
@@ -358,12 +394,19 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                           } else if (this._correctAnswer == false &&  _firstTime==1){
                             _nextButtonColor= Colors.redAccent;
                             earnedCoin = false;
+                            coins = coins -1 ;
                             print('incorrect');
+                            controller.duration = Duration(seconds: secondsLeft - 1 >=0 ? secondsLeft - 1:0);
+                            controller.reset();
+                            controller.reverse(
+                                from: controller.value == 0.0
+                                    ? 1.0
+                                    : controller.value);
                           } else {
                           _openCustomDialog(context, "Aikasi loppui :D", "this time you made: " +coins.toString()+" points ");
 //                            if(coins<10) startTimer(coins,coins);
 //                            else startTimer(10,10);
-                          coins = 10;
+                          coins = 0;
                             _firstTime=1;
                           }
 
