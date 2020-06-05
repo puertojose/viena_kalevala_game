@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:viena_kalevala_game/kalevala.dart';
 import 'package:viena_kalevala_game/route.dart';
 import 'package:viena_kalevala_game/search.dart';
 import 'package:viena_kalevala_game/utils.dart';
 import 'awards.dart';
 import 'cardgame.dart';
+import 'dart:convert';
+
+//var _playerData = new PlayerData();
 
 class Home extends StatefulWidget {
-  const Home({ Key key }) : super(key: key);
-  @override
+  const Home({ Key key}) : super(key: key);
+
   _HomeState createState() => _HomeState();
 
   static Route<dynamic> routeAnim() {
@@ -28,14 +32,42 @@ class Home extends StatefulWidget {
   }
 }
 
+//class PlayerData {
+//  int points;
+//
+//  PlayerData() {
+//    points = 0;
+//  }
+//
+//  toJSONEncodable() {
+//    return jsonEncode(points);
+//  }
+//}
+
+
+
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  final LocalStorage storage = new LocalStorage('kalevala_points');
+  bool initialized = false;
+
+  _updatePoints(int nPoints) {
+    setState(() {
+//      _playerData.points= _playerData.points + nPoints;
+      _saveToStorage();
+    });
+  }
+
+  _saveToStorage() {
+//    storage.setItem('kalevala_points', _playerData.toJSONEncodable());
+  }
 
 
   final List<Tab> myTabs = <Tab>[
     Tab(
       text: 'Kortit',
+//      text: '',
       icon: Icon(Icons.contacts,
-        color: Colors.green,
+        color: Colors.greenAccent,
         size: 30.0,
       )
       ,
@@ -44,20 +76,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     ),
     Tab(
         text: 'Kalevala',
+//    text: '',
         icon: Icon(Icons.face,
-          color: Colors.green,
+          color: Colors.greenAccent,
           size: 30.0,
         )),
     Tab(
         text: 'Sanakirja',
+//        text: '',
         icon: Icon(Icons.search,
-          color: Colors.green,
+          color: Colors.greenAccent,
           size: 30.0,
         )),
     Tab(
         text: 'Palkinto',
+//        text: '',
         icon: Icon(Icons.star,
-          color: Colors.green,
+          color:Colors.greenAccent,
           size: 30.0,
         )),
   ];
@@ -80,57 +115,46 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+//        title: Text(_playerData.points.toString()),
+        backgroundColor: Colors.cyan,
         bottom: TabBar(
           controller: _tabController,
           tabs: myTabs,
         ),
       ),
-      body: TabBarView(
+      body:
+      TabBarView(
         controller: _tabController,
-        children: myTabs.map((Tab tab) {
+        children:  myTabs.map((Tab tab) {
           if (tab.text == 'Kortit') {
             return CardGame();
+//          FutureBuilder(
+//            future: storage.ready,
+//            builder: (BuildContext context, AsyncSnapshot snapshot) {
+//              if (snapshot.data == null) {
+//                return CardGame();
+//              } else {
+////                _playerData = storage.getItem('kalevala_points');
+//                return CardGame();
+//              }
+//            });
+
           }
           else if (tab.text == 'Sanakirja'){
             return Search();
-//            return SliverAppBar(
-//              floating: true,
-//              snap: true,
-//              title: Text("Search App"),
-//              actions: <Widget>[
-//                IconButton(
-//                  icon: Icon(Icons.search),
-//                  onPressed: () {
-//                    showSearch(
-//                      context: context,
-//                      delegate: CustomSearchDelegate(),
-//                    );
-//                  },
-//                ),
-//              ],
-//            );
           } else if (tab.text == 'Palkinto'){
             return Awards();
           } else if (tab.text == 'Kalevala'){
             return Kalevala();
           }
-
-
           else {
             final String label = tab.text.toLowerCase();
             return Center(
                 child: Chip(
-//              avatar: CircleAvatar(
-//                backgroundColor: Colors.grey.shad  e800,
-//                child: Text('AB'),
-//              ),
+
                   label: Text(label),
                 )
-//            child: Text(
-//              'This is the $label tab',
-//              style: const TextStyle(fontSize: 36),
-//
-//            ),
+
             );
           }
         }).toList(),
