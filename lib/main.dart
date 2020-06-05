@@ -45,6 +45,7 @@ class MyHomePage extends StatelessWidget {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.teal,
         title: Text(title),
       ),
       body: Center(
