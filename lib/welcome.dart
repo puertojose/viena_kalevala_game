@@ -68,9 +68,9 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerProviderStateMixin {
   static var musicPlaying = false;
 
-  static String skyAsset() => "assets/karelian_flag.png";
+  static String skyAsset() => "assets/karelian_flag2.png";
 
-  static String logoAsset() => "assets/name.png";
+  static String logoAsset() => "assets/name2.png";
 
   static String heroAsset() => "bearr.png";
 
@@ -285,7 +285,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
                 padding: EdgeInsets.only(top: constraints.maxHeight * 0.1, left: 15.0, right: 15.0),
                 child: Image.asset(
                   logoAsset(),
-                  height: 150.0,
+                  height: 230.0,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -297,8 +297,8 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.12),
                   child: Image.asset(
-                    "assets/taptostart.png",
-                    height: 55.0,
+                    "assets/taptostart2.png",
+                    height: 120.0,
                   ),
                 ),
               ),
