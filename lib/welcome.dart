@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
 //import 'dart:html' as html;
 
@@ -5,9 +6,11 @@ import 'package:flutter/material.dart';
 
 import 'route.dart';
 
-import 'game.dart';
+//import 'game.dart';
 import 'home.dart';
 import 'button.dart';
+import 'globals.dart' as globals;
+import 'utils.dart';
 //
 //class Platform {
 //  var _iOS = ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'];
@@ -66,15 +69,24 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerProviderStateMixin {
+
+
+  Utils utils = new Utils();
+  var ut;
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<int> _points;
+  Future<String> _userName;
+
   static var musicPlaying = false;
 
   static String skyAsset() => "assets/karelian_flag2.png";
 
   static String logoAsset() => "assets/name2.png";
 
-  static String heroAsset() => "bearr.png";
+//  static String heroAsset() => "bearr.png";
 
-  static String bossAsset() => "raindeerr.png";
+//  static String bossAsset() => "raindeerr.png";
 
   var heroYAxis = 0.0;
   var bossYAxis = 1.0;
@@ -171,6 +183,13 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
 
   @override
   void initState() {
+    ut = utils.createState();
+    _points = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt('points') ?? 0);
+    });
+    _userName = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getString("userName") ?? 'ghf');
+    });
     super.initState();
     initTapAnimation();
     initAnimation();
@@ -252,32 +271,32 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
                 fit: BoxFit.cover,
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Align(
-                alignment: Alignment(0.0, -1.0),
-                heightFactor: bossYAxis,
-                child: Image.asset(
-                  bossAsset(),
-                  width: size,
-                  height: size,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Align(
-                alignment: Alignment.topCenter,
-                heightFactor: heroYAxis,
-                child: Image.asset(
-                  heroAsset(),
-                  width: size / 1.5,
-                  height: size / 1.5,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+//            Align(
+//              alignment: Alignment.center,
+//              child: Align(
+//                alignment: Alignment(0.0, -1.0),
+//                heightFactor: bossYAxis,
+//                child: Image.asset(
+//                  bossAsset(),
+//                  width: size,
+//                  height: size,
+//                  fit: BoxFit.cover,
+//                ),
+//              ),
+//            ),
+//            Align(
+//              alignment: Alignment.bottomCenter,
+//              child: Align(
+//                alignment: Alignment.topCenter,
+//                heightFactor: heroYAxis,
+//                child: Image.asset(
+//                  heroAsset(),
+//                  width: size / 1.5,
+//                  height: size / 1.5,
+//                  fit: BoxFit.cover,
+//                ),
+//              ),
+//            ),
             SafeArea(
               bottom: false,
               child: Container(
@@ -327,6 +346,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
                 },
               ),
             ),
+
 //            platform.isMobile()
 //                ? Center(
 //                    child: Align(
@@ -348,6 +368,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
 //                    ),
 //                  )
 //                : Container(),
+          Utils(),
           ],
         );
       }),

@@ -1,42 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'powerups.dart';
 import 'bosses.dart';
+import 'globals.dart' as globals;
 
-class Utils {
-  
-  static List<PowerUps> getPowerUps() {
-    var list = List<PowerUps>();
-    list.add(PowerUps("Master Sword", 2.15, false, 50));
-    list.add(PowerUps("Lengendary Sword", 2.45, false, 180));
-    list.add(PowerUps("Keyblade", 3.75, false, 300));
-    list.add(PowerUps("Lightsaber", 4.95, false, 520));
-    list.add(PowerUps("Buster Sword", 6.15, false, 1700));
-    list.add(PowerUps("Soul Edge", 8.65, false, 2400));
-    return list;
-  }
-  
-  static List<Bosses> getBosses() {
-    var list = List<Bosses>();
-    list.add(Bosses("Lunabi", 450, "boss/boss_one.png"));
-    list.add(Bosses("ivygrass", 880, "boss/boss_two.png"));
-    list.add(Bosses("Tombster", 1120, "boss/boss_three.png"));
-    list.add(Bosses("Glidestone", 2260, "boss/boss_four.png"));
-    list.add(Bosses("Smocka", 2900, "boss/boss_five.png"));
-    list.add(Bosses("Clowntorch", 4100, "boss/boss_six.png"));
-    list.add(Bosses("Marsattack", 5380, "boss/boss_seven.png"));
-    list.add(Bosses("Unknown", 7000, "boss/boss_eight.png"));
-    list.add(Bosses("ExArthur", 10000, "boss/boss_nine.png"));
-    return list;
+class Utils extends StatefulWidget{
+
+  @override
+  _UtilsState createState() => _UtilsState();
+
+
+}
+
+
+class _UtilsState extends State<Utils>{
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<int> _points;
+  Future<String> _name;
+
+  @override
+  Widget build(BuildContext context) {
+    return loadData(context);
   }
 
-  static TextStyle textStyle(double size, {Color color = Colors.white}) {
-    return TextStyle(
-      color: color,
-      fontFamily: "Gameplay",
-      fontSize: size,
+  @override
+  void initState() {
+    super.initState();
+    _points = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt('points') ?? 0);
+    }).then((value) => globals.totalPoints=value);
+    _name = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getString('userName') ?? 'Sampo');
+    }).then((value) => globals.userName=value);
+//    _getThingsOnStartup();
+
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+  }
+
+  Future _getThingsOnStartup() async {
+    _prefs.then((prefs) =>
+        globals.totalPoints = prefs.getInt('points')
+        );
+    _prefs.then((prefs) =>
+        globals.userName = prefs.getString('userName')
     );
   }
+
+
+  Widget loadData(BuildContext context) {
+    return Stack(
+        children: <Widget>[
+          FutureBuilder<int>(
+              future: _points,
+              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const CircularProgressIndicator();
+                  default:
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Text(
+                        'Tervetuloa takaisin',
+                      );
+                    }
+                }
+              }),
+          FutureBuilder<String>(
+              future: _name,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const CircularProgressIndicator();
+                  default:
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Text(
+                        ' l' ,
+                      );
+                    }
+                }
+              })
+        ]);
+  }
 }
+
 
 class StrokeText extends StatelessWidget {
   final String text;
