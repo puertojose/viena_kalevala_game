@@ -23,10 +23,12 @@ class _AwardsState extends State<Awards> {
 
     return MaterialApp(
       title: title,
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
+//        appBar: AppBar(
+//          backgroundColor: Colors.cyan,
+//          title: Text(title),
+//        ),
         body: GridView.count(
           // Create a grid with 2 columns. If you change the scrollDirection to
           // horizontal, this produces 2 rows.
@@ -43,6 +45,7 @@ class _AwardsState extends State<Awards> {
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+                          backgroundColor: Colors.cyan,
                           title: const Text('Aino'),
                         ),
                         body: Container(
@@ -123,6 +126,8 @@ Ainon vaiheet on kuvattu Kalevalan runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Ilmarinen'),
                         ),
                         body: Container(
@@ -204,6 +209,8 @@ Ilmarisesta kerrotaan runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Joukahainen'),
                         ),
                         body: Container(
@@ -284,6 +291,8 @@ Joukahainen esiintyy runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Kullervo'),
                         ),
                         body: Container(
@@ -361,6 +370,8 @@ Kullervon kohtalosta kerrotaan seuraavissa runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Kyllikki'),
                         ),
                         body: Container(
@@ -443,6 +454,8 @@ Kyllikki mainitaan runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Lemminkainen'),
                         ),
                         body: Container(
@@ -524,6 +537,8 @@ Lemminkäisen löydät seuraavista runoista:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Lemminkaisenaiti'),
                         ),
                         body: Container(
@@ -605,6 +620,8 @@ Lemminkäisen äiti mainitaan runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Louhi'),
                         ),
                         body: Container(
@@ -685,6 +702,8 @@ Pohjolan emännän löydät seuraavista runoista:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Marjatta'),
                         ),
                         body: Container(
@@ -768,6 +787,8 @@ Marjatan tarina kerrotaan runossa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Pohjolantyttaret'),
                         ),
                         body: Container(
@@ -850,6 +871,8 @@ Pohjolan tyttäristä ja kilpakosinnasta puhutaan seuraavissa runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Sampo'),
                         ),
                         body: Container(
@@ -939,6 +962,8 @@ Sampo mainitaan runoissa:
                     builder: (BuildContext context) {
                       return Scaffold(
                         appBar: AppBar(
+
+                          backgroundColor: Colors.cyan,
                           title: const Text('Vainamoinen'),
                         ),
                         body: Container(
