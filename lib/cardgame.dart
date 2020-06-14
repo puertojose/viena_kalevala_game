@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viena_kalevala_game/home.dart';
 import 'package:viena_kalevala_game/timer_animation.dart';
 import 'package:viena_kalevala_game/utils.dart';
@@ -15,6 +16,8 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
+
+import 'globals.dart' as globals;
 
 
 
@@ -31,6 +34,7 @@ Color jadeAccentColor = Colors.tealAccent;
 Color poolColor = Color(0xff97CCD0);
 Color strawberryColor = Color(0xffDD4835);
 Color blushColor = Color(0xffEF8D81);
+
 
 class CardGame extends StatefulWidget {
   const CardGame({Key key}) : super(key: key);
@@ -49,6 +53,14 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 
 
 
+  final _c = TextEditingController();
+
+
+//
+//
+//  StreamSubscription streamSubscription;
+
+
 
   //Jade #5C9487
   //Pool #97CCD0
@@ -63,7 +75,8 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
   FlutterTts flutterTts = FlutterTts();
   var ttsState;
   Future _speak(text) async{
-    var result = await flutterTts.speak(text);
+    String karelian = convertToKarelianPhonetic(text);
+    var result = await flutterTts.speak(karelian);
     if (result == 1) setState(() => ttsState = TtsState.playing);
   }
 
@@ -85,12 +98,14 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 
   @override
   void initState() {
+//    streamSubscription = widget.shouldTriggerChange.listen((_) => _loadNextQuestion());
     _getThingsOnStartup().then((value){
       //startTimer(13,13);
       print('Async done');
 
-
-      _introDialog(_scaffoldKey.currentContext, "Tervetuloa Karjalan korttipeliin.",
+      if(globals.userName=='Sampo'){
+        _nameDialog(context, 'sdas');
+      } else _introDialog(_scaffoldKey.currentContext, "Tervetuloa Karjalan korttipeliin.",
           "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
     });
     super.initState();
@@ -100,43 +115,57 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
     );
   }
 
-  List<String> list = List();
-  Uint8List bytes;
-  Future _getData() async {
-
-    print("WEB IMAGEEEE");
-    var response = await http.get('https://www.google.com/search?q=%22+karhu+%22&source=lnms&tbm=isch&sa=X');
-    print(response.statusCode);
-    if (response.statusCode == 200){
-      print("response");
-      dom.Document document = parser.parse(response.body);
-
-      final elements = document.getElementsByTagName('img');
-//      final elements = document.getElementsByClassName('islrc');
-//      print(elements[0].firstChild.firstChild);
-      setState(() {
-        print(elements[0].attributes['src'].substring(22));
-        bytes = base64.decode(elements[0].attributes['src'].substring(22));
-      });
-//        list = elements
-//            .map((element) =>
-//        element.attributes['src'])
-//            .toList();
-
-      print("WEB IMAGEEEE2");
-      print(list);
-      print(list.length);
-
-
-    }
-
-
-
-//    FutureBuilder<String>(
-//        element.getElementsByTagName("img")[0].attributes['src'])
-//    );
-
+//  @override
+//  didUpdateWidget(CardGame old) {
+//    super.didUpdateWidget(old);
+//    // in case the stream instance changed, subscribe to the new one
+//    if (widget.shouldTriggerChange != old.shouldTriggerChange) {
+//      streamSubscription.cancel();
+//      streamSubscription = widget.shouldTriggerChange.listen((_) => _loadNextQuestion());
+//    }
+//  }
+  @override
+  dispose() {
+    super.dispose();
   }
+//
+//  List<String> list = List();
+//  Uint8List bytes;
+//  Future _getData() async {
+//
+//    print("WEB IMAGEEEE");
+//    var response = await http.get('https://www.google.com/search?q=%22+karhu+%22&source=lnms&tbm=isch&sa=X');
+//    print(response.statusCode);
+//    if (response.statusCode == 200){
+//      print("response");
+//      dom.Document document = parser.parse(response.body);
+//
+//      final elements = document.getElementsByTagName('img');
+////      final elements = document.getElementsByClassName('islrc');
+////      print(elements[0].firstChild.firstChild);
+//      setState(() {
+//        print(elements[0].attributes['src'].substring(22));
+//        bytes = base64.decode(elements[0].attributes['src'].substring(22));
+//      });
+////        list = elements
+////            .map((element) =>
+////        element.attributes['src'])
+////            .toList();
+//
+//      print("WEB IMAGEEEE2");
+//      print(list);
+//      print(list.length);
+//
+//
+//    }
+//
+//
+//
+////    FutureBuilder<String>(
+////        element.getElementsByTagName("img")[0].attributes['src'])
+////    );
+//
+//  }
 
   Future _getThingsOnStartup() async {
     await loadAsset('assets/cardgame.csv').then((dynamic output) {
@@ -159,7 +188,7 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 
   var coins = 0;
 
-  var bosses = Utils.getBosses();
+//  var bosses = Utils.getBosses();
   var bossIndex = 0;
 
   var level = 1;
@@ -222,24 +251,28 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
       );
     }
   }
+//
+//  Widget earnedCoins() {
+//    if (earnedCoin) {
+//      return Padding(
+//        padding: const EdgeInsets.only(left: 0.0),
+//        child: Text(
+//          "+1",
+//          style: Utils.textStyle(45.0, color: poolColor),
+//
+//        ),
+//      );
+//    } else {
+//      return Container(
+//        width: 0.0,
+//        height: 0.0,
+//      );
+//    }
+//  }
 
-  Widget earnedCoins() {
-    if (earnedCoin) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 0.0),
-        child: Text(
-          "+1",
-          style: Utils.textStyle(45.0, color: poolColor),
 
-        ),
-      );
-    } else {
-      return Container(
-        width: 0.0,
-        height: 0.0,
-      );
-    }
-  }
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -393,7 +426,7 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                               print('correct');
                               earnedCoin = true;
                               coins = coins +secondsLeft;
-                              storage.setItem('kalevala_points', jsonEncode(coins));
+                              globals.totalPoints = globals.totalPoints +secondsLeft;
                               _notifyDialog(context, '+ '+secondsLeft.toString(),'',300);
                               _loadNextQuestion();
 //                            controller.reverse(
@@ -443,9 +476,9 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 //                            _notifyDialog(context, '+ '+secondsLeft.toString(),'',300);
                               _loadNextQuestion();
                               _introDialog(_scaffoldKey.currentContext,
-                                  "Your time ran out :D ",
-                                  "this time you made: " + coins.toString() +
-                                      " points ");
+                                  "Aikasi loppui :D "+ globals.userName,
+                                  "Tällä kertaa teit: " + coins.toString() +
+                                      " pistettä ");
 //                            if(coins<10) startTimer(coins,coins);
 //                            else startTimer(10,10);
                               coins = 0;
@@ -494,9 +527,9 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                               playAudio('wrong.mp3');
                             } else {
                               _introDialog(_scaffoldKey.currentContext,
-                                  "Aikasi loppui :D",
-                                  "this time you made: " + coins.toString() +
-                                      " points ");
+                                  "Aikasi loppui :D "+ globals.userName,
+                                  "Tällä kertaa teit: " + coins.toString() +
+                                      " pistettä ");
 //                            if(coins<10) startTimer(coins,coins);
 //                            else startTimer(10,10);
                               coins = 0;
@@ -550,45 +583,61 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                   ),
 
                 ),
-
+//                FutureBuilder<int>(
+//                  future: incrementPoints(coins),
+//                    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+//                      switch (snapshot.connectionState) {
+//                        case ConnectionState.waiting:
+//                          return const CircularProgressIndicator();
+//                        default:
+//                          if (snapshot.hasError) {
+//                            return Text('Error: ${snapshot.error}');
+//                          } else {
+//                            return Text(
+//                              'Button tapped ${snapshot.data} time${snapshot.data == 1 ? '' : 's'}.\n\n'
+//                                  'This should persist across restarts.',
+//                            );
+//                          }
+//                      }
+//                    }
+//                ),
 //
 //                Image.asset(
 //                  "coin.jpeg",
 //                  height: 12.2,
 //                ),
 
-                AnimatedCrossFade(
-                  secondChild: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      //child: CircularProgressIndicator(),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                  ),
-//                  firstChild: Container(
+//                AnimatedCrossFade(
+//                  secondChild: Container(
 //                    child: Padding(
 //                      padding: const EdgeInsets.all(8.0),
-//                      child: Text(
-//                        'Olet oikeassa!',
-//                        style: TextStyle(
-//                            backgroundColor: Colors.greenAccent,
-//                            color: Colors.black,
-//                            fontSize: 24.0,
-//                            fontWeight: FontWeight.bold),
-//                      ),
+//                      //child: CircularProgressIndicator(),
 //                    ),
-//
-//                    height: 80.0,
-//                    width: 130.0,
+//                    height: 40.0,
+//                    width: 100.0,
 //                  ),
-                  firstChild:  earnedCoins(),
-                  crossFadeState: _correctAnimation
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                  duration: Duration(milliseconds: 1500),
-                )
-                ,
+////                  firstChild: Container(
+////                    child: Padding(
+////                      padding: const EdgeInsets.all(8.0),
+////                      child: Text(
+////                        'Olet oikeassa!',
+////                        style: TextStyle(
+////                            backgroundColor: Colors.greenAccent,
+////                            color: Colors.black,
+////                            fontSize: 24.0,
+////                            fontWeight: FontWeight.bold),
+////                      ),
+////                    ),
+////
+////                    height: 80.0,
+////                    width: 130.0,
+////                  ),
+////                  firstChild:  earnedCoins(),
+//                  crossFadeState: _correctAnimation
+//                      ? CrossFadeState.showFirst
+//                      : CrossFadeState.showSecond,
+//                  duration: Duration(milliseconds: 1500),
+//                )
               ],
             ),
           ),
@@ -802,6 +851,90 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
           );
 //            ]);
         });
+  }
+
+  void _nameDialog (context,text, [content, int time=6000]) async{
+    //print("base 64");
+    //print(bytes);
+    await showDialog<String>(
+      barrierColor: Colors.white.withOpacity(0.9),
+      barrierDismissible: false,
+      context: context,
+      builder: (context)
+      {return Column(
+
+          children: <Widget>[
+//
+//              Image.memory(bytes),
+            new AlertDialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              title: Text(
+      "Tervetuloa Karjalan korttipeliin.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: jadeColor,
+                    backgroundColor: Colors.transparent,
+                    fontSize: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 15 <= 50.0 ? MediaQuery
+                        .of(context)
+                        .size
+                        .width / 15 : 50.0,
+                    fontWeight: FontWeight.bold),
+
+              ),
+              content: Text(
+       "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !",
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                    color: blushColor,
+                    backgroundColor: Colors.transparent,
+                    fontSize: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 20 <= 30.0 ? MediaQuery
+                        .of(context)
+                        .size
+                        .width / 20 : 30.0,
+                    fontWeight: FontWeight.bold),
+
+              ),
+            ),
+            new Expanded(
+                child: new Scaffold( body: TextFormField(
+                  autofocus: true,
+                  controller: _c,
+                  decoration: new InputDecoration(
+                      labelText: 'Sinun Lempinimesi', hintText: 'Sampo'),
+                ),
+                )),
+            new FlatButton(
+              child: new Text("Jatkaa"),
+              onPressed: (){
+                setState((){
+                  globals.userName = _c.text;
+                });
+
+                Navigator.pop(context, globals.userName);
+              },
+            )
+          ]);
+      },
+
+    );
+  }
+
+
+  convertToKarelianPhonetic(String text) {
+    text = text.replaceAll('c', 'ts');
+    text = text.replaceAll('č', 'tsh');
+    text = text.replaceAll('šš', 's');
+    text = text.replaceAll('š', 'sh');
+    text = text.replaceAll('ž', 'j');
+    print(text);
+    return text;
   }
 }
 
