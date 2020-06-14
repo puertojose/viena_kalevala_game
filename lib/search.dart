@@ -22,39 +22,40 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: DataSearch());
-//              setState(() {
-//                if(this.cusIcon.icon == Icons.text_fields){
-//                  this.cusIcon = Icon(Icons.cancel);
-//                  this.cusSearchBar = TextField(
-//                    style: TextStyle(
-//                      color: Colors.white,
-//                      fontSize: 16.0,
-//                    ),
-//                    textInputAction: TextInputAction.go,
-//                    decoration: InputDecoration(
-//                        border: InputBorder.none,
-//                        hintText: "Kirjoita tähän :)",
-//                    ),
-//                  );
-//                }
-//                else {
-//                  this.cusIcon = Icon(Icons.text_fields);
-//                  this.cusSearchBar = Text('Kirjoita tähän :)');
-//                }
-//              });
-
-            },
-            icon: cusIcon,
-          ),
-        ],
-        title: cusSearchBar,
-
-      ),
+//      appBar: AppBar(
+//        backgroundColor: Colors.tealAccent,
+//        actions: <Widget>[
+//          IconButton(
+//            onPressed: () {
+//              showSearch(context: context, delegate: DataSearch());
+////              setState(() {
+////                if(this.cusIcon.icon == Icons.text_fields){
+////                  this.cusIcon = Icon(Icons.cancel);
+////                  this.cusSearchBar = TextField(
+////                    style: TextStyle(
+////                      color: Colors.white,
+////                      fontSize: 16.0,
+////                    ),
+////                    textInputAction: TextInputAction.go,
+////                    decoration: InputDecoration(
+////                        border: InputBorder.none,
+////                        hintText: "Kirjoita tähän :)",
+////                    ),
+////                  );
+////                }
+////                else {
+////                  this.cusIcon = Icon(Icons.text_fields);
+////                  this.cusSearchBar = Text('Kirjoita tähän :)');
+////                }
+////              });
+//
+//            },
+//            icon: cusIcon,
+//          )
+//        ],
+//        title: cusSearchBar,
+//
+//      ),
 //      body: RefreshIndicator(
 //        onRefresh: fetchDictionary,
 //        child: FutureBuilder(
@@ -74,6 +75,13 @@ class _SearchState extends State<Search> {
 //              return null;
 //            }),
 //      ),
+    body: Center(
+        child : GestureDetector(
+          onTap:() {
+            showSearch(context: context, delegate: DataSearch());
+          },
+        child:Image.asset('assets/book.jpg', height: MediaQuery.of(context).size.height,)
+      ))
     );
 
   }
