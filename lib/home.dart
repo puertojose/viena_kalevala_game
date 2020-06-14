@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viena_kalevala_game/kalevala.dart';
 import 'package:viena_kalevala_game/route.dart';
 import 'package:viena_kalevala_game/search.dart';
@@ -7,8 +10,18 @@ import 'package:viena_kalevala_game/utils.dart';
 import 'awards.dart';
 import 'cardgame.dart';
 import 'dart:convert';
+import 'globals.dart' as globals;
+import 'utils.dart' as utils;
 
 //var _playerData = new PlayerData();
+// some global place
+final nPoints = new GlobalKey<_HomeState>();
+
+Color jadeColor = Colors.teal;
+Color jadeAccentColor = Colors.tealAccent;
+Color poolColor = Color(0xff97CCD0);
+Color strawberryColor = Color(0xffDD4835);
+Color blushColor = Color(0xffEF8D81);
 
 class Home extends StatefulWidget {
   const Home({ Key key}) : super(key: key);
@@ -47,19 +60,62 @@ class Home extends StatefulWidget {
 
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  final LocalStorage storage = new LocalStorage('kalevala_points');
-  bool initialized = false;
 
-  _updatePoints(int nPoints) {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<int> _points;
+  Future<String> _name;
+  String _text = "initial";
+  TextEditingController _c;
+
+//  final LocalStorage storage = new LocalStorage('kalevala_points');
+//  bool initialized = false;
+//
+
+  Future<void> incrementPoints() async {
+
+    final SharedPreferences prefs = await _prefs;
+    int points = globals.totalPoints;
+    String name = (prefs.getString('userName') ?? 'asdasd');
+
     setState(() {
-//      _playerData.points= _playerData.points + nPoints;
-      _saveToStorage();
+      _name = prefs.setString("userName", globals.userName).then((bool success) {
+        return name;
+      });
+      _points = prefs.setInt("points", globals.totalPoints).then((bool success) {
+        return points;
+      });
     });
+    return -1;
   }
 
-  _saveToStorage() {
-//    storage.setItem('kalevala_points', _playerData.toJSONEncodable());
+
+  @override
+  void initState() {
+
+    _c = new TextEditingController();
+    super.initState();
+    _tabController = TabController(vsync: this, length: myTabs.length);
+//    _points = _prefs.then((SharedPreferences prefs) {
+//      print("Hello Points");
+//      print(prefs.getInt('points'));
+//      print(prefs.getInt('points') ?? 0);
+//      return (prefs.getInt('points') ?? 0);
+//    }).then((value) => globals.totalPoints=value);
+    _points = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt('points') ?? 0);
+    }).then((value) => globals.totalPoints=value);
+    _name = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getString('userName') ?? 'Sampo');
+    }).then((value) => globals.userName=value);
   }
+//
+//  _updatePoints(int nPoints) {
+//    setState(() {
+////      _playerData.points= _playerData.points + nPoints;
+//
+//    });
+//  }
+
 
 
   final List<Tab> myTabs = <Tab>[
@@ -99,11 +155,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   TabController _tabController;
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: myTabs.length);
-  }
 
   @override
   void dispose() {
@@ -115,7 +166,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        title: Text(_playerData.points.toString()),
+        title: Text(globals.userName+'    '+globals.totalPoints.toString()),
         backgroundColor: Colors.cyan,
         bottom: TabBar(
           controller: _tabController,
@@ -127,6 +178,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         controller: _tabController,
         children:  myTabs.map((Tab tab) {
           if (tab.text == 'Kortit') {
+
+            Utils();
+            incrementPoints();
             return CardGame();
 //          FutureBuilder(
 //            future: storage.ready,
@@ -141,10 +195,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
           }
           else if (tab.text == 'Sanakirja'){
+            incrementPoints();
             return Search();
           } else if (tab.text == 'Palkinto'){
+            incrementPoints();
             return Awards();
           } else if (tab.text == 'Kalevala'){
+            incrementPoints();
             return Kalevala();
           }
           else {
@@ -161,4 +218,114 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       ),
     );
   }
+
+  _showDialog() async {
+    await showDialog<String>(
+      barrierColor: Colors.white.withOpacity(0.9) ,
+      context: context,
+      child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                autofocus: true,
+                decoration: new InputDecoration(
+                    labelText: 'Full Name', hintText: 'eg. John Smith'),
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: const Text('OPEN'),
+              onPressed: () {
+                Navigator.pop(context);
+              })
+        ],
+      ),
+    );
+  }
+
+
+ void _nameDialog (context,text, [content, int time=6000]) async{
+    //print("base 64");
+    //print(bytes);
+
+   await showDialog<String>(
+      barrierColor: Colors.white.withOpacity(0.9),
+      barrierDismissible: false,
+      context: context,
+      builder: (context)
+      {return Column(
+
+            children: <Widget>[
+//
+//              Image.memory(bytes),
+              new AlertDialog(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                title: Text(
+                  'tyfytfytf',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: jadeColor,
+                      backgroundColor: Colors.transparent,
+                      fontSize: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 15 <= 50.0 ? MediaQuery
+                          .of(context)
+                          .size
+                          .width / 15 : 50.0,
+                      fontWeight: FontWeight.bold),
+
+                ),
+                content: Text(
+                  'hgfhgf',
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                      color: blushColor,
+                      backgroundColor: Colors.transparent,
+                      fontSize: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 20 <= 30.0 ? MediaQuery
+                          .of(context)
+                          .size
+                          .width / 20 : 30.0,
+                      fontWeight: FontWeight.bold),
+
+                ),
+              ),
+              new Expanded(
+                child: new Scaffold( body: TextField(
+                  autofocus: true,
+                  decoration: new InputDecoration(
+                      labelText: 'Full Name', hintText: 'eg. John Smith'),
+                ),
+              )),
+              new FlatButton(
+                child: new Text("Save"),
+                onPressed: (){
+                  setState((){
+                    this._text = _c.text;
+                    Navigator.pop(context, true);
+                  });
+
+                },
+              )
+            ]);
+      },
+
+    );
+  }
+
+
 }
+
