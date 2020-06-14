@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
+  shared_preferences: ^0.5.7+3
   localstorage: ^3.0.0
   http: ^0.12.1
   universal_html: ^1.1.4
@@ -70,6 +71,7 @@ flutter:
     - assets/characters/sampo.png
     - assets/characters/vainamoinen.png
     - assets/test.mp3
+    - assets/book.jpg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
