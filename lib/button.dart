@@ -119,7 +119,7 @@ class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin
                     );
                   },
                   child: Stack(
-                    overflow: Overflow.visible,
+//                    overflow: Overflow.visible,
                     children: <Widget>[
                       ClipRRect(
                         borderRadius: radius,

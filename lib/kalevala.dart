@@ -79,15 +79,15 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
   List<List<dynamic>> questions;
 
 
-
   @override
   void initState() {
     _getThingsOnStartup().then((value){
       print('Async done');
-      if(globals.userName=='Sampo'){
-        _nameDialog(context, 'sdas');
-      } else _introDialog(context, "Tervetuloa Karjalan korttipeliin.",
-          "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
+      if(globals.totalPoints<=0){
+        _introDialog(context, "Tervetuloa Kalevalan korttipeliin.",
+            "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
+        if(globals.userName==" ") _nameDialog(context, 'asd ');
+      }
     });
     super.initState();
     controller = AnimationController(
@@ -575,8 +575,8 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                 setState((){
                   globals.userName = _c.text;
                 });
-
-                Navigator.pop(context, globals.userName);
+                Navigator.maybePop(context);
+//                Navigator.pop(context, globals.userName);
               },
             )
           ]);

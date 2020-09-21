@@ -105,7 +105,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       return (prefs.getInt('points') ?? 0);
     }).then((value) => globals.totalPoints=value);
     _name = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getString('userName') ?? 'Sampo');
+      return (prefs.getString('userName') ?? " ");
     }).then((value) => globals.userName=value);
   }
 //

@@ -103,10 +103,12 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
       //startTimer(13,13);
       print('Async done');
 
-      if(globals.userName=='Sampo'){
-        _nameDialog(context, 'sdas');
-      } else _introDialog(_scaffoldKey.currentContext, "Tervetuloa Karjalan korttipeliin.",
-          "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
+      if(globals.totalPoints<=0){
+        _introDialog(_scaffoldKey.currentContext, "Tervetuloa Karjalan korttipeliin.",
+            "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
+        if(globals.userName==" ") _nameDialog(context, 'asd');
+
+      }
     });
     super.initState();
     controller = AnimationController(
@@ -717,19 +719,19 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 //    var l = new List.generate(4, (_) => rng.nextInt(4)+2);
     var l = [2,3,4,5];
     l.shuffle();
-    print(l);
-    target = questions[_questionNumber][1];
+    var currentQuestion= rng.nextInt(questions.length-1);
+    target = questions[currentQuestion][1];
     _choices= {
-      questions[_questionNumber][l.last]: l.removeLast() == 2
+      questions[currentQuestion][l.last]: l.removeLast() == 2
           ? true
           : false,
-      questions[_questionNumber][l.last]: l.removeLast() == 2
+      questions[currentQuestion][l.last]: l.removeLast() == 2
           ? true
           : false,
-      questions[_questionNumber][l.last]: l.removeLast() == 2
+      questions[currentQuestion][l.last]: l.removeLast() == 2
           ? true
           : false,
-      questions[_questionNumber][l.last]: l.removeLast() == 2
+      questions[currentQuestion][l.last]: l.removeLast() == 2
           ? true
           : false,
     };
@@ -915,8 +917,8 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
               onPressed: (){
                 setState((){
                   globals.userName = _c.text;
+                  print(_c.text);
                 });
-
                 Navigator.pop(context, globals.userName);
               },
             )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:viena_kalevala_game/welcome.dart';
 
 //import 'game.dart';
@@ -11,6 +12,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+//      builder: (context, widget) => ResponsiveWrapper.builder(
+//        ResponsiveWrapper(
+//            maxWidth: 1200,
+//            minWidth: 480,
+//            defaultScale: true,
+//            breakpoints: [
+//              ResponsiveBreakpoint.resize(480, name: MOBILE),
+//              ResponsiveBreakpoint.autoScale(800, name: TABLET),
+//              ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+//            ],
+//            background: Container(color: Color(0xFFF5F5F5))
+//        )
+//      ),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch(settings.name) {
@@ -22,6 +36,7 @@ class MyApp extends StatelessWidget {
           default: return Welcome.route();
         }
       },
+
       initialRoute: "home",
 //      routes: {
 //        '/': (_) => Welcome(),
