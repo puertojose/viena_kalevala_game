@@ -1,4 +1,6 @@
 ## Running example:
+ 
+ It's optimized to run in phones aspect ratio, full web responsive is not ready
  https://puertojose.github.io/viena_kalevala_game/
  
 # Kalevala Adventure

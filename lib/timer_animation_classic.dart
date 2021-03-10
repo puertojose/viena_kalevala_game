@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 class TimerPainterClassic extends CustomPainter {
   var text;
