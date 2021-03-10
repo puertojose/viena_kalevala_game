@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:csv/csv.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:math';
 import 'globals.dart' as globals;
 
-import 'package:viena_kalevala_game/timer_animation.dart';
+import 'package:viena_kalevala_game/timer_animation_classic.dart';
 //import 'package:quiver/async.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -235,7 +236,7 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                     animation: controller,
                     builder: (BuildContext context, Widget child) {
                       return CustomPaint(
-                          painter: TimerPainter(
+                          painter: TimerPainterClassic(
                             text: timerString,
                             animation: controller,
                             backgroundColor: Colors.white,
@@ -575,7 +576,10 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                 setState((){
                   globals.userName = _c.text;
                 });
-                Navigator.maybePop(context);
+                //Navigator.maybePop(context);
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pop(context, globals.userName);
+                });
 //                Navigator.pop(context, globals.userName);
               },
             )

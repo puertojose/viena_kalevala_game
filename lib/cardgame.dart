@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +33,7 @@ if (dart.library.html) 'package:viena_kalevala_game/audio_web.dart'; // dart:htm
 Color jadeColor = Colors.teal;
 Color jadeAccentColor = Colors.tealAccent;
 Color poolColor = Color(0xff97CCD0);
+Color poolColorLighter =  Color(0xffedfffb);
 Color strawberryColor = Color(0xffDD4835);
 Color blushColor = Color(0xffEF8D81);
 
@@ -49,7 +51,7 @@ enum TtsState { playing, stopped }
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
-class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
+class _CardGameState extends State<CardGame> with WidgetsBindingObserver, TickerProviderStateMixin {
 
 
 
@@ -102,19 +104,25 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
     _getThingsOnStartup().then((value){
       //startTimer(13,13);
       print('Async done');
-
-      if(globals.totalPoints<=0){
+      // Assuming is the first time opening the app
+      print(globals.firstTime);
+      if(globals.firstTime){
         _introDialog(_scaffoldKey.currentContext, "Tervetuloa Karjalan korttipeliin.",
             "Vastaa niin moniin oikeisiin kysymyksiin, ennen kuin aika loppuu. Mennään !");
-        if(globals.userName==" ") _nameDialog(context, 'asd');
-
       }
-    });
+
+      globals.firstTime = false;
+      //If no user name registered ask for it :)
+    }).then((value){
+      print(globals.firstTime);
+      if(globals.userName==" ") _nameDialog(_scaffoldKey.currentContext, 'asd');
+    });;
     super.initState();
     controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 10),
     );
+    WidgetsBinding.instance.addObserver(this);
   }
 
 //  @override
@@ -126,9 +134,22 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 //      streamSubscription = widget.shouldTriggerChange.listen((_) => _loadNextQuestion());
 //    }
 //  }
+
   @override
-  dispose() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
   }
 //
 //  List<String> list = List();
@@ -283,22 +304,25 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
       body: Center(
         child: Material(
           color: Colors.white,
-          elevation: 14.0,
-          borderRadius: BorderRadius.circular(24.0),
+          // elevation: 14.0,
+          // borderRadius: BorderRadius.circular(24.0),
           shadowColor: poolColor,
           child: Container(
-            width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
-            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/4.8,
+            // width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
+            // height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/5,
             child: Column(
 
               children: <Widget>[
+                Row(
+                    children: <Widget>[
                 Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  //color: new Color(0xffffc107),
+                  height: MediaQuery.of(context).size.height/6,
+                  width: MediaQuery.of(context).size.height/6,
+                  // alignment: Alignment.centerLeft,
+                  // color: poolColor,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    color: blushColor,
+                    // borderRadius: BorderRadius.circular(12.0),
+                    color: poolColorLighter,
                   ),
                   child: AnimatedBuilder(
                     animation: controller,
@@ -338,16 +362,16 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
 //                  ),
                 ),
                 Container(
-                  height: 20,
-                  width: MediaQuery.of(context).size.width/4,
+                  height: MediaQuery.of(context).size.height/6,
+                  width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.height/6,
+                  color: poolColorLighter,
                   //color: new Color(0xffffc107),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: Colors.white,
-//                    color: setColorProgress(coins),
-                  ),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(16.0),
+//                     color: Colors.white,
+// //                    color: setColorProgress(coins),
+//                   ),
+                    alignment: Alignment.center,
                     child: AnimatedBuilder(
                         animation: controller,
                         builder: (BuildContext context, Widget child) {
@@ -355,32 +379,38 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                               style: earnedCoin
                                   ? TextStyle(
                                   color: jadeColor,
-                                  fontSize: 21.0,
+                                  fontSize: 23.0,
                                   fontWeight: FontWeight.bold)
                                   :
                               TextStyle(
                                   color: strawberryColor,
-                                  fontSize: 21.0,
+                                  fontSize: 30.0,
                                   fontWeight: FontWeight.bold),
                               duration: const Duration(milliseconds: 500),
                               child: Text('$coins'));
                         }
                     ),
-                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                    ]
+                ),
+                // Container(
+                //   padding: const EdgeInsets.all(8.0),
+                  Container(
+                    height: MediaQuery.of(context).size.height/10,
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
                     child: Text(
                       'Valitse oikea käännös',
                       style: TextStyle(color: Colors.black, fontSize: 18.0),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                  Container(
                     height: MediaQuery.of(context).size.height/10,
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
                     child: Text(
                       '$target',
                       style: TextStyle(
@@ -389,10 +419,11 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w800),
                     ),
                   ),
-                ),
+                // ),
                 Container(
-                    alignment: AlignmentDirectional.topCenter,
-                    height: MediaQuery.of(context).size.height/6,
+                    alignment: AlignmentDirectional.center,
+                    height: MediaQuery.of(context).size.height/3,
+                    // color: poolColorLighter,
                     child: Wrap(
                       spacing: 4.0,
                       runSpacing: 4.0,
@@ -400,17 +431,24 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                         yield* _buildChoiceList();
                       }()),
                     )),
-                Padding(
-                  padding: const EdgeInsets.only(bottom:20.0),
+                // Padding(
+                //   padding: const EdgeInsets.all(15.0),
+                Expanded(
                   child: Container(
-                    height: MediaQuery.of(context).size.height/12,
+                    // height: MediaQuery.of(context).size.height/7,
+                    // width: MediaQuery.of(context).size.width,
+                    // constraints: BoxConstraints.expand(),
+                    alignment: Alignment.center,
+                    color: poolColorLighter,
                     child: RaisedButton(
+
+                        padding: EdgeInsets.all(10.0),
                         color: _nextButtonColor,
                         child: Text(
                           'Seuraava',
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 18.0,
+                              fontSize: MediaQuery.of(context).size.width/18,
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
@@ -581,10 +619,13 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                           }
                         },
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0))),
+                            borderRadius: BorderRadius.circular(30.0))
+                    ),
                   ),
+                )
 
-                ),
+
+                // ),
 //                FutureBuilder<int>(
 //                  future: incrementPoints(coins),
 //                    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
@@ -660,12 +701,12 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
     List<Widget> choices = List();
     _choices.forEach((option,k){
       choices.add(Container(
-//        height: MediaQuery.of(context).size.height/18,
-        padding: const EdgeInsets.all(1.0),
+          //height: MediaQuery.of(context).size.height/18,
+ //       padding: EdgeInsets.all(4.0),
         child: ChoiceChip(
           label: Text(option),
           labelStyle: TextStyle(
-              color: Colors.black, fontSize: MediaQuery.of(context).size.width/27 > 27? 27:MediaQuery.of(context).size.width/27, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: MediaQuery.of(context).size.width/21 > 27? 27:MediaQuery.of(context).size.width/21, fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -807,9 +848,9 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
         context: context,
         builder: (context)
         {
-          Future.delayed(Duration(milliseconds: time), () {
-            Navigator.of(context).pop(true);
-          });
+          // Future.delayed(Duration(milliseconds: time), () {
+          //   Navigator.of(context).pop(true);
+          // });
 //        return Column(
 //
 //            children: <Widget>[
@@ -918,8 +959,13 @@ class _CardGameState extends State<CardGame> with TickerProviderStateMixin {
                 setState((){
                   globals.userName = _c.text;
                   print(_c.text);
+
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    Navigator.pop(context, globals.userName);
+                  });
                 });
-                Navigator.pop(context, globals.userName);
+
+                // Navigator.of(context).pop();
               },
             )
           ]);

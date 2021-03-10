@@ -75,3 +75,5 @@ lib/generated_plugin_registrant.dart
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 /.flutter-plugins-dependencies
+/assets/1200px-Karelian_National_Flag.svg.png
+/assets/IMG_4021.psd

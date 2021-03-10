@@ -365,96 +365,96 @@ class DataSearch extends SearchDelegate<String> {
 
           }
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return Container();
-  }
+  // @override
+  // Widget buildSuggestions(BuildContext context) {
+  //   // TODO: implement buildSuggestions
+  //   return Container();
+  // }
 
 
-//  @override
-//  Widget buildSuggestions(BuildContext context) {
-//    return FutureBuilder(
-//        future: fetchDictionary(),
-//        builder: (BuildContext context, AsyncSnapshot snapshot) {
-//          switch (snapshot.connectionState) {
-//            case ConnectionState.none:
-//              return Text('Press button to start.');
-//            case ConnectionState.active:
-//            case ConnectionState.waiting:
-//              return Center(
-//                child: CircularProgressIndicator(),
-//              );
-//            case ConnectionState.done:
-//              if (snapshot.hasError) return null;
-//              return ListView.builder(
-////                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase())).toList().length ,
-//                itemCount: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length,
-//                itemBuilder: (context, index) => Card(
-//                  color: Colors.white,
-//                  elevation: 0.0,
-//                  child: ExpansionTile(
-//                    title: Padding(
-//                      padding: const EdgeInsets.all(18.0),
-//                      child: Column(
-//                        crossAxisAlignment: CrossAxisAlignment.start,
-//                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                        children: <Widget>[
-//                          Text(
-//                            dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].word,
-//                            style: TextStyle(
-//                              fontSize: 20.0,
-//                              fontWeight: FontWeight.bold,
-//
-//                            ),
-////                            toolbarOptions: ToolbarOptions(
-////                              copy: true,
-////                              selectAll: true)
-//                          ),
-//                          Text(
-//                            dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].definition,
-//                            style: TextStyle(
-//                              fontSize: 22.0,
-//                              fontWeight: FontWeight.normal,
-//                            ),
-////                              toolbarOptions: ToolbarOptions(
-////                                  copy: true,
-////                                  selectAll: true)
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                    leading: CircleAvatar(
-//                      backgroundColor: Colors.grey[100],
-//                      child: Text(dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].word.substring(0,2),style: TextStyle(color: Colors.cyan),),
-//                    ),
-//                    children: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].examples.map((m) {
-//                      return ListTile(
-//                        focusColor: Colors.cyan,
-//                        title: Text(
-//                          m.toString(),
-//                          textAlign: TextAlign.center,
-//                          style: TextStyle(
-//                            color: Colors.cyan,
-//                            fontWeight: FontWeight.bold,
-//                          ),
-////                            toolbarOptions: ToolbarOptions(
-////                                copy: true,
-////                                selectAll: true)
-//                        ),
-//                      );
-//                    }).toList(),
-//                  ),
-//                ),
-//              );
-//          }
-//          return Container();
-//          });
-////    return ListView.builder(itemBuilder: (context, index) => ListTile(
-////      leading: Icon(Icons.location_city),
-////      title: Text(suggestionList[index]),
-////    ))
-//  }
+ @override
+ Widget buildSuggestions(BuildContext context) {
+   return FutureBuilder(
+       future: fetchDictionary(),
+       builder: (BuildContext context, AsyncSnapshot snapshot) {
+         switch (snapshot.connectionState) {
+           case ConnectionState.none:
+             return Text('Press button to start.');
+           case ConnectionState.active:
+           case ConnectionState.waiting:
+             return Center(
+               child: CircularProgressIndicator(),
+             );
+           case ConnectionState.done:
+             if (snapshot.hasError) return null;
+             return ListView.builder(
+//                itemCount: dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.word.startsWith(query.toLowerCase())).toList().length ,
+               itemCount: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length > 15 ? 15 : dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase()) || w.word.startsWith(query.toLowerCase())).toList().length,
+               itemBuilder: (context, index) => Card(
+                 color: Colors.white,
+                 elevation: 0.0,
+                 child: ExpansionTile(
+                   title: Padding(
+                     padding: const EdgeInsets.all(18.0),
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                       children: <Widget>[
+                         Text(
+                           dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].word,
+                           style: TextStyle(
+                             fontSize: 20.0,
+                             fontWeight: FontWeight.bold,
+
+                           ),
+//                            toolbarOptions: ToolbarOptions(
+//                              copy: true,
+//                              selectAll: true)
+                         ),
+                         Text(
+                           dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].definition,
+                           style: TextStyle(
+                             fontSize: 22.0,
+                             fontWeight: FontWeight.normal,
+                           ),
+//                              toolbarOptions: ToolbarOptions(
+//                                  copy: true,
+//                                  selectAll: true)
+                         ),
+                       ],
+                     ),
+                   ),
+                   leading: CircleAvatar(
+                     backgroundColor: Colors.grey[100],
+                     child: Text(dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].word.substring(0,2),style: TextStyle(color: Colors.cyan),),
+                   ),
+                   children: dictionary.entries.where((w)=> w.definition.startsWith(query.toLowerCase())|| w.word.startsWith(query.toLowerCase())).toList()[index].examples.map((m) {
+                     return ListTile(
+                       focusColor: Colors.cyan,
+                       title: Text(
+                         m.toString(),
+                         textAlign: TextAlign.center,
+                         style: TextStyle(
+                           color: Colors.cyan,
+                           fontWeight: FontWeight.bold,
+                         ),
+//                            toolbarOptions: ToolbarOptions(
+//                                copy: true,
+//                                selectAll: true)
+                       ),
+                     );
+                   }).toList(),
+                 ),
+               ),
+             );
+         }
+         return Container();
+         });
+//    return ListView.builder(itemBuilder: (context, index) => ListTile(
+//      leading: Icon(Icons.location_city),
+//      title: Text(suggestionList[index]),
+//    ))
+ }
 
 //  @override
 //  Widget buildSuggestions(BuildContext context) {

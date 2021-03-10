@@ -17,6 +17,7 @@ class _UtilsState extends State<Utils>{
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<int> _points;
   Future<String> _name;
+  Future<bool> _firstTime;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,9 @@ class _UtilsState extends State<Utils>{
     _name = _prefs.then((SharedPreferences prefs) {
       return (prefs.getString('userName') ?? 'Sampo');
     }).then((value) => globals.userName=value);
+    _firstTime = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getBool('firstTime') ?? true);
+    }).then((value) => globals.firstTime=value);
 //    _getThingsOnStartup();
 
   }
@@ -65,7 +69,23 @@ class _UtilsState extends State<Utils>{
                       return Text('Error: ${snapshot.error}');
                     } else {
                       return Text(
-                        'Tervetuloa takaisin',
+                        '',
+                      );
+                    }
+                }
+              }),
+          FutureBuilder<bool>(
+              future: _firstTime,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const CircularProgressIndicator();
+                  default:
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Text(
+                        '',
                       );
                     }
                 }
@@ -81,11 +101,12 @@ class _UtilsState extends State<Utils>{
                       return Text('Error: ${snapshot.error}');
                     } else {
                       return Text(
-                        ' l' ,
+                        '' ,
                       );
                     }
                 }
               })
+
         ]);
   }
 }

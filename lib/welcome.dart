@@ -70,13 +70,13 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerProviderStateMixin {
 
-
   Utils utils = new Utils();
   var ut;
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<int> _points;
   Future<String> _userName;
+  Future<bool> _firstTime;
 
   static var musicPlaying = false;
 
@@ -115,7 +115,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
   }
 
   void initAnimation() {
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animationHero = Tween(begin: 0.0, end: 0.6).animate(CurvedAnimation(parent: _controller, curve: Curves.decelerate))
       ..addStatusListener((state) {
         if (state == AnimationStatus.completed) {
@@ -158,7 +158,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
             });
           });
 
-    _fadeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _fadeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
     _fadeAnimation = ColorTween(begin: Colors.transparent, end: Colors.black)
         .animate(CurvedAnimation(parent: _fadeController, curve: Curves.decelerate))
           ..addStatusListener(
@@ -188,7 +188,10 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
       return (prefs.getInt('points') ?? 0);
     });
     _userName = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getString("userName") ?? 'ghf');
+      return (prefs.getString("userName") ?? 'Sampo');
+    });
+    _firstTime = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getBool("firstTime") ?? true);
     });
     super.initState();
     initTapAnimation();
@@ -219,6 +222,17 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
   }
 
   @override
+  void dispose() {
+    disposeAnimations();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+  }
+  @override
   void deactivate() {
     if (audio != null) {
       audio.pause();
@@ -228,16 +242,6 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
     super.deactivate();
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
 
   void switchMusic({bool remove}) {
     if (musicPlaying) {
@@ -261,10 +265,18 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: LayoutBuilder(builder: (context, constraints) {
-        final size = constraints.biggest.longestSide;
-        return Stack(
+        return
+          Container (
+          width:MediaQuery.of(context).size.height/1.5,
+          height: MediaQuery.of(context).size.height,
+          child :
+          Stack(
+
           children: <Widget>[
+
+            Icon(Icons.gamepad),
             SizedBox.expand(
               child: Image.asset(
                 skyAsset(),
@@ -333,18 +345,18 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-              child: FancyButton(
-                child: Icon(
-                  Icons.music_note,
-                  size: 20,
-                  color: musicPlaying ? Colors.white : Colors.black54,
-                ),
-                size: 25,
-                color: Color(0xFF67AC5B),
-                onPressed: () {
-                  switchMusic(remove: false);
-                },
-              ),
+              // child: FancyButton(
+              //   child: Icon(
+              //     Icons.music_note,
+              //     size: 20,
+              //     color: musicPlaying ? Colors.white : Colors.black54,
+              //   ),
+              //   size: 25,
+              //   color: Color(0xFF67AC5B),
+              //   onPressed: () {
+              //     switchMusic(remove: false);
+              //   },
+              // ),
             ),
 
 //            platform.isMobile()
@@ -370,7 +382,9 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
 //                : Container(),
           Utils(),
           ],
-        );
+        )
+          );
+
       }),
     );
   }
