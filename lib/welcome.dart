@@ -269,7 +269,7 @@ class _WelcomeState extends State<Welcome> with WidgetsBindingObserver, TickerPr
       body: LayoutBuilder(builder: (context, constraints) {
         return
           Container (
-          width:MediaQuery.of(context).size.height,
+          width:MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child :
           Stack(
