@@ -189,43 +189,16 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-//      appBar: AppBar(
-//        leading: IconButton(
-//            icon: Icon(
-//              Icons.ac_unit,
-//              color: Colors.black,
-//            ),
-//            onPressed: () {}),
-//        title: Text(
-//          "Synonym Flashcards",
-//          style: TextStyle(
-//            color: Colors.black,
-//          ),
-//        ),
-//        actions: <Widget>[
-//          IconButton(
-//              icon: Icon(
-//                Icons.note_add,
-//                color: Colors.black,
-//              ),
-//              onPressed: () {
-//                //
-//              }),
-//        ],
-//      ),
       body: Center(
         child: Material(
           color: Colors.white,
           elevation: 14.0,
           borderRadius: BorderRadius.circular(24.0),
           shadowColor: Color(0x802196F3),
-          child: Container(
-            width: MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/8,
-            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/4.8,
             child: Column(
               children: <Widget>[
                 Container(
-                  height: 50,
+                  height: MediaQuery.of(context).size.height/10,
                   width: MediaQuery.of(context).size.width,
                   //color: new Color(0xffffc107),
                   decoration: BoxDecoration(
@@ -260,7 +233,7 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                   ),
                 ),
                 Container(
-                  height: 20,
+                  height: MediaQuery.of(context).size.height/10,
                   width: MediaQuery.of(context).size.width/4,
                   //color: new Color(0xffffc107),
                   decoration: BoxDecoration(
@@ -292,6 +265,7 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
+                    height: MediaQuery.of(context).size.height/10,
                     child: Text(
                       'Valitse oikea käännös',
                       style: TextStyle(color: Colors.black, fontSize: 18.0),
@@ -334,10 +308,10 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                         yield* _buildChoiceList();
                       }()),
                     )),
-                Padding(
-                  padding: const EdgeInsets.all(13.0),
+                Expanded(
                   child: Container(
-                    height: MediaQuery.of(context).size.height/11,
+
+                    alignment: Alignment.center,
                     child: RaisedButton(
                         color: _nextButtonColor,
                         child: Text(
@@ -454,7 +428,6 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
 //                )
               ],
             ),
-          ),
         ),
       ),
     );
