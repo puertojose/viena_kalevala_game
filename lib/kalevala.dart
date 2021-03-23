@@ -318,7 +318,7 @@ class _KalevalaState extends State<Kalevala> with TickerProviderStateMixin{
                           'Seuraava',
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 18.0,
+                              fontSize: MediaQuery.of(context).size.width/18,
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
